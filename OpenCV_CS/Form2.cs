@@ -13,7 +13,7 @@ namespace ENTcapture
 {
     public partial class Form2 : Form
     {
-        int snapkeycode;
+        int snapkeycode, startkeycode; //10-5桁：startkey
         private bool[] PresetReady = new bool[8];
 
         public Form2()
@@ -57,45 +57,34 @@ namespace ENTcapture
                 comboBoxReCodec.Items.Add("libxvid");
                 comboBoxReCodec.Items.Add("libx264");
                 comboBoxReCodec.Items.Add("h264_qsv");
+                comboBoxReCodec.Items.Add("h264_nvenc");
+                comboBoxReCodec.Items.Add("h264_amf");
                 comboBoxReCodec.Items.Add("hevc");
                 comboBoxReCodec.Items.Add("hevc_qsv -load_plugin hevc_hw");
+                comboBoxReCodec.Items.Add("hevc_nvenc");
+                comboBoxReCodec.Items.Add("hevc_amf");
 
                 int idx_recodec = comboBoxReCodec.Items.IndexOf(Properties.Settings.Default.recodec);
                 if (idx_recodec >= 0) comboBoxReCodec.SelectedIndex = idx_recodec;
 
                 this.textBoxThept.Text = Properties.Settings.Default.thept;
 
-                string[] tests = Properties.Settings.Default.tests.Split(',');
                 this.textBoxTests.Text = Properties.Settings.Default.tests;
+                SetTests(this.textBoxTests.Text);
 
-                int k = Properties.Settings.Default.snapkey; //snapkey:10^4:ctrl,10^3:shift,mod1000:keyvalue
+                int k = Properties.Settings.Default.snapkey % 100000; //snapkey:10^4:ctrl,10^3:shift,mod1000:keyvalue
                 if (k / 10000 > 0) this.checkBoxCtrl.Checked = true;
                 if ((k % 10000) / 1000 > 0) this.checkShift.Checked = true;
                 snapkeycode = k % 1000;
                 textBoxChar.Text = ((Keys)snapkeycode).ToString();
+
+                k = (int)Properties.Settings.Default.snapkey / 100000;
+                if (k / 10000 > 0) this.checkBoxCtrl2.Checked = true;
+                if ((k % 10000) / 1000 > 0) this.checkBoxShift2.Checked = true;
+                startkeycode = k % 1000;
+                if(startkeycode > 0) textBoxChar2.Text = ((Keys)startkeycode).ToString();
+
                 textBoxJpegQuality.Text = Properties.Settings.Default.jpegquality.ToString();
-
-
-                this.presetName1.Text = Properties.Settings.Default.name1;
-                this.presetTest1.Items.Clear();
-                this.presetTest1.Items.AddRange(tests);
-                this.presetTest1.Text = Properties.Settings.Default.test1;
-                this.presetName2.Text = Properties.Settings.Default.name2;
-                this.presetTest2.Items.Clear();
-                this.presetTest2.Items.AddRange(tests);
-                this.presetTest2.Text = Properties.Settings.Default.test2;
-                this.presetName3.Text = Properties.Settings.Default.name3;
-                this.presetTest3.Items.Clear();
-                this.presetTest3.Items.AddRange(tests);
-                this.presetTest3.Text = Properties.Settings.Default.test3;
-                this.presetName4.Text = Properties.Settings.Default.name4;
-                this.presetTest4.Items.Clear();
-                this.presetTest4.Items.AddRange(tests);
-                this.presetTest4.Text = Properties.Settings.Default.test4;
-                this.presetName5.Text = Properties.Settings.Default.name5;
-                this.presetTest5.Items.Clear();
-                this.presetTest5.Items.AddRange(tests);
-                this.presetTest5.Text = Properties.Settings.Default.test5;
 
                 presetDevice1.Items.Clear();
                 presetDevice2.Items.Clear();
@@ -199,6 +188,40 @@ namespace ENTcapture
                 MessageBox.Show(ex.ToString());
             }
 
+        }
+
+        private void SetTests(string strTests)
+        {
+            try
+            {
+                string[] tests = strTests.Split(',');
+
+                this.presetName1.Text = Properties.Settings.Default.name1;
+                this.presetTest1.Items.Clear();
+                this.presetTest1.Items.AddRange(tests);
+                this.presetTest1.Text = Properties.Settings.Default.test1;
+                this.presetName2.Text = Properties.Settings.Default.name2;
+                this.presetTest2.Items.Clear();
+                this.presetTest2.Items.AddRange(tests);
+                this.presetTest2.Text = Properties.Settings.Default.test2;
+                this.presetName3.Text = Properties.Settings.Default.name3;
+                this.presetTest3.Items.Clear();
+                this.presetTest3.Items.AddRange(tests);
+                this.presetTest3.Text = Properties.Settings.Default.test3;
+                this.presetName4.Text = Properties.Settings.Default.name4;
+                this.presetTest4.Items.Clear();
+                this.presetTest4.Items.AddRange(tests);
+                this.presetTest4.Text = Properties.Settings.Default.test4;
+                this.presetName5.Text = Properties.Settings.Default.name5;
+                this.presetTest5.Items.Clear();
+                this.presetTest5.Items.AddRange(tests);
+                this.presetTest5.Text = Properties.Settings.Default.test5;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -368,6 +391,8 @@ namespace ENTcapture
             this.textBoxTests.Text.Replace("、", ",");
             Properties.Settings.Default.tests = this.textBoxTests.Text;
 
+            SetTests(this.textBoxTests.Text);
+
         }
 
         private void buttonPresetPicture1_Click(object sender, EventArgs e)
@@ -465,6 +490,11 @@ namespace ENTcapture
             if (checkBoxCtrl.Checked) k += 10000;
             if (checkShift.Checked) k += 1000;
             k += snapkeycode;
+
+            if (checkBoxCtrl2.Checked)  k += 1000000000;
+            if (checkBoxShift2.Checked) k +=  100000000;
+            k += startkeycode * 100000;
+            
             Properties.Settings.Default.snapkey = k;
         }
 
@@ -890,6 +920,13 @@ namespace ENTcapture
                 textBoxPGaddress.Text = "";
                 textBoxPGaddress.Focus();
             }
+
+        }
+
+        private void textBoxChar2_KeyDown(object sender, KeyEventArgs e)
+        {
+            this.textBoxChar2.Text = e.KeyCode.ToString();
+            startkeycode = e.KeyValue;
 
         }
     }

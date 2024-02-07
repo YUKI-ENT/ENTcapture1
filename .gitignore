@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# .BAK ファイルを無視する
+*.bak
+
+# .org ファイルを無視する
+*.org

@@ -191,17 +191,22 @@
             this.checkBoxAutoFiling = new System.Windows.Forms.CheckBox();
             this.checkBoxTemp = new System.Windows.Forms.CheckBox();
             this.comboBoxReCodec = new System.Windows.Forms.ComboBox();
+            this.textBoxPGaddress = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxRSB = new System.Windows.Forms.GroupBox();
+            this.label74 = new System.Windows.Forms.Label();
             this.labelRSBASEURL = new System.Windows.Forms.Label();
             this.textBoxRSBASEURL = new System.Windows.Forms.TextBox();
             this.groupBoxTemp = new System.Windows.Forms.GroupBox();
             this.label73 = new System.Windows.Forms.Label();
             this.numericUpDownTimeout = new System.Windows.Forms.NumericUpDown();
             this.labelTimeout = new System.Windows.Forms.Label();
-            this.textBoxPGaddress = new System.Windows.Forms.TextBox();
-            this.label74 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
+            this.textBoxChar2 = new System.Windows.Forms.TextBox();
+            this.checkBoxShift2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxCtrl2 = new System.Windows.Forms.CheckBox();
+            this.label76 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.presetPictureBox1)).BeginInit();
@@ -1755,6 +1760,15 @@
             this.comboBoxReCodec.TabIndex = 42;
             this.toolTip1.SetToolTip(this.comboBoxReCodec, "rawは無圧縮のため、ファイルサイズがとても大きくなります");
             // 
+            // textBoxPGaddress
+            // 
+            this.textBoxPGaddress.Location = new System.Drawing.Point(177, 97);
+            this.textBoxPGaddress.Name = "textBoxPGaddress";
+            this.textBoxPGaddress.Size = new System.Drawing.Size(198, 19);
+            this.textBoxPGaddress.TabIndex = 36;
+            this.toolTip1.SetToolTip(this.textBoxPGaddress, "PostgreSQLのかどうしているサーバーIPアドレスを指定");
+            this.textBoxPGaddress.Leave += new System.EventHandler(this.textBoxPGaddress_Leave);
+            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(382, 17);
@@ -1795,6 +1809,15 @@
             this.groupBoxRSB.TabStop = false;
             this.groupBoxRSB.Text = "RSBase関連設定";
             // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Location = new System.Drawing.Point(33, 100);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(141, 12);
+            this.label74.TabIndex = 37;
+            this.label74.Text = "PostgreSQLサーバーアドレス";
+            // 
             // labelRSBASEURL
             // 
             this.labelRSBASEURL.AutoSize = true;
@@ -1831,9 +1854,9 @@
             this.groupBoxTemp.Controls.Add(this.textBoxAutoDelete);
             this.groupBoxTemp.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.groupBoxTemp.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBoxTemp.Location = new System.Drawing.Point(12, 104);
+            this.groupBoxTemp.Location = new System.Drawing.Point(12, 122);
             this.groupBoxTemp.Name = "groupBoxTemp";
-            this.groupBoxTemp.Size = new System.Drawing.Size(651, 146);
+            this.groupBoxTemp.Size = new System.Drawing.Size(651, 128);
             this.groupBoxTemp.TabIndex = 39;
             this.groupBoxTemp.TabStop = false;
             this.groupBoxTemp.Text = "一時録画ファイル関連";
@@ -1878,29 +1901,64 @@
             this.labelTimeout.TabIndex = 40;
             this.labelTimeout.Text = "最長録画時間(分)";
             // 
-            // textBoxPGaddress
+            // label75
             // 
-            this.textBoxPGaddress.Location = new System.Drawing.Point(177, 97);
-            this.textBoxPGaddress.Name = "textBoxPGaddress";
-            this.textBoxPGaddress.Size = new System.Drawing.Size(198, 19);
-            this.textBoxPGaddress.TabIndex = 36;
-            this.toolTip1.SetToolTip(this.textBoxPGaddress, "PostgreSQLのかどうしているサーバーIPアドレスを指定");
-            this.textBoxPGaddress.Leave += new System.EventHandler(this.textBoxPGaddress_Leave);
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(312, 97);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(204, 12);
+            this.label75.TabIndex = 44;
+            this.label75.Text = "左のボックスをクリック後キーを押してください";
             // 
-            // label74
+            // textBoxChar2
             // 
-            this.label74.AutoSize = true;
-            this.label74.Location = new System.Drawing.Point(33, 100);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(141, 12);
-            this.label74.TabIndex = 37;
-            this.label74.Text = "PostgreSQLサーバーアドレス";
+            this.textBoxChar2.Location = new System.Drawing.Point(259, 94);
+            this.textBoxChar2.MaxLength = 8;
+            this.textBoxChar2.Name = "textBoxChar2";
+            this.textBoxChar2.ReadOnly = true;
+            this.textBoxChar2.Size = new System.Drawing.Size(47, 19);
+            this.textBoxChar2.TabIndex = 40;
+            this.textBoxChar2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxChar2_KeyDown);
+            // 
+            // checkBoxShift2
+            // 
+            this.checkBoxShift2.AutoSize = true;
+            this.checkBoxShift2.Location = new System.Drawing.Point(205, 96);
+            this.checkBoxShift2.Name = "checkBoxShift2";
+            this.checkBoxShift2.Size = new System.Drawing.Size(48, 16);
+            this.checkBoxShift2.TabIndex = 43;
+            this.checkBoxShift2.Text = "Shift";
+            this.checkBoxShift2.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCtrl2
+            // 
+            this.checkBoxCtrl2.AutoSize = true;
+            this.checkBoxCtrl2.Location = new System.Drawing.Point(160, 96);
+            this.checkBoxCtrl2.Name = "checkBoxCtrl2";
+            this.checkBoxCtrl2.Size = new System.Drawing.Size(41, 16);
+            this.checkBoxCtrl2.TabIndex = 42;
+            this.checkBoxCtrl2.Text = "ctrl";
+            this.checkBoxCtrl2.UseVisualStyleBackColor = true;
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(14, 97);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(73, 12);
+            this.label76.TabIndex = 41;
+            this.label76.Text = "取込開始キー";
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(676, 765);
+            this.Controls.Add(this.label75);
+            this.Controls.Add(this.textBoxChar2);
+            this.Controls.Add(this.checkBoxShift2);
+            this.Controls.Add(this.checkBoxCtrl2);
+            this.Controls.Add(this.label76);
             this.Controls.Add(this.groupBoxTemp);
             this.Controls.Add(this.groupBoxRSB);
             this.Controls.Add(this.buttonImport);
@@ -2121,5 +2179,10 @@
         private System.Windows.Forms.ComboBox comboBoxReCodec;
         private System.Windows.Forms.Label label74;
         private System.Windows.Forms.TextBox textBoxPGaddress;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.TextBox textBoxChar2;
+        private System.Windows.Forms.CheckBox checkBoxShift2;
+        private System.Windows.Forms.CheckBox checkBoxCtrl2;
+        private System.Windows.Forms.Label label76;
     }
 }

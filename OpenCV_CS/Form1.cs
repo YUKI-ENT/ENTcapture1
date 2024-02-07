@@ -45,7 +45,7 @@ namespace ENTcapture
         private int rec_start = 4, rec_count = 0; // rec_delay - rec_start間のfpsを測定
         private bool rec_state = false, video_open = false, keydown = false;
         private int jpeg_quality = 100;
-        public Keys snapkey;
+        public Keys snapkey, startkey;
         private int vwidth, vheight;
         private byte playmode = 0, mode = 0;
         private int videoPosition = 0;
@@ -90,7 +90,7 @@ namespace ENTcapture
         //キーボードGlobal Hook
         private GlobalKeyboardHook keyboardHook;
         private bool pressedCtrl=false, pressedShift=false;
-        private Keys charSnapKey;
+        private Keys charSnapKey, charStartKey;
 
         public Form1()
         {
@@ -798,13 +798,23 @@ namespace ENTcapture
 
                 this.button2.Text = CaptureButtonOn;
 
-                int k = Properties.Settings.Default.snapkey;
+                int k = Properties.Settings.Default.snapkey % 100000;
                 var ks = new int[3];
                 if (k / 10000 > 0) ks[0] = (int)Keys.Control;
                 if ((k % 10000) / 1000 > 0) ks[1] = (int)Keys.Shift;
                 ks[2] = k % 1000;
                 snapkey = (Keys)(ks[0]) | (Keys)(ks[1]) | (Keys)(ks[2]);
                 charSnapKey = (Keys)(ks[2]);
+
+                ks[0] = 0;
+                ks[1] = 0;
+                ks[2] = 0;
+                k = Properties.Settings.Default.snapkey / 100000;
+                if (k / 10000 > 0) ks[0] = (int)Keys.Control;
+                if ((k % 10000) / 1000 > 0) ks[1] = (int)Keys.Shift;
+                ks[2] = k % 1000;
+                startkey = (Keys)(ks[0]) | (Keys)(ks[1]) | (Keys)(ks[2]);
+                charStartKey = (Keys)(ks[2]);
 
                 jpeg_quality = Properties.Settings.Default.jpegquality;
 
@@ -2651,9 +2661,9 @@ namespace ENTcapture
             if (pressedCtrl) currentKey |= Keys.Control;
             if(pressedShift) currentKey |= Keys.Shift;
 
-            //Debug.Write("KeyDown:" + e.KeyCode);
-            //Debug.Write(" pressedCtrl:" + pressedCtrl.ToString());
-            //Debug.WriteLine(" pressedShift:" + pressedShift.ToString());
+            Debug.Write("KeyDown:" + e.KeyCode);
+            Debug.Write(" pressedCtrl:" + pressedCtrl.ToString());
+            Debug.WriteLine(" pressedShift:" + pressedShift.ToString());
            
             //MessageBox.Show("Keyboard down event:" + currentKey.ToString());
 
@@ -2670,6 +2680,19 @@ namespace ENTcapture
                     this.buttonSnap.PerformClick();
                     this.ActiveControl = this.buttonSnap;
                     //this.buttonSnap.Focus();
+                }
+            } else if(currentKey == startkey)
+            {
+                if (!keydown)
+                {
+                    keydown = true;
+
+                    message = "Start key is received";
+                    t = message_time - 1;
+                    sw.Restart();
+
+                    this.button2.PerformClick();
+                    this.ActiveControl = this.button2;
                 }
             }
         }

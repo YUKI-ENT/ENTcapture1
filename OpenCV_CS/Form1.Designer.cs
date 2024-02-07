@@ -127,7 +127,7 @@
             // labelMessage
             // 
             this.labelMessage.AutoSize = true;
-            this.labelMessage.Location = new System.Drawing.Point(17, 113);
+            this.labelMessage.Location = new System.Drawing.Point(17, 100);
             this.labelMessage.Name = "labelMessage";
             this.labelMessage.Size = new System.Drawing.Size(67, 12);
             this.labelMessage.TabIndex = 5;
@@ -156,10 +156,10 @@
             // labelFPS
             // 
             this.labelFPS.AutoSize = true;
-            this.labelFPS.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFPS.Location = new System.Drawing.Point(36, 177);
+            this.labelFPS.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFPS.Location = new System.Drawing.Point(77, 189);
             this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(31, 13);
+            this.labelFPS.Size = new System.Drawing.Size(26, 12);
             this.labelFPS.TabIndex = 17;
             this.labelFPS.Text = "fps";
             // 
@@ -171,17 +171,17 @@
             // labelTime
             // 
             this.labelTime.AutoSize = true;
-            this.labelTime.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTime.Location = new System.Drawing.Point(135, 177);
+            this.labelTime.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTime.Location = new System.Drawing.Point(170, 189);
             this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(31, 13);
+            this.labelTime.Size = new System.Drawing.Size(26, 12);
             this.labelTime.TabIndex = 20;
             this.labelTime.Text = "sec";
             // 
             // trackBar1
             // 
             this.trackBar1.LargeChange = 30;
-            this.trackBar1.Location = new System.Drawing.Point(28, 144);
+            this.trackBar1.Location = new System.Drawing.Point(28, 132);
             this.trackBar1.Maximum = 10000;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(720, 45);
@@ -364,7 +364,7 @@
             // 
             // buttonFFmpeg
             // 
-            this.buttonFFmpeg.Location = new System.Drawing.Point(673, 173);
+            this.buttonFFmpeg.Location = new System.Drawing.Point(673, 180);
             this.buttonFFmpeg.Name = "buttonFFmpeg";
             this.buttonFFmpeg.Size = new System.Drawing.Size(75, 28);
             this.buttonFFmpeg.TabIndex = 10;
@@ -374,7 +374,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(522, 173);
+            this.buttonStart.Location = new System.Drawing.Point(522, 180);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(62, 28);
             this.buttonStart.TabIndex = 41;
@@ -384,7 +384,7 @@
             // 
             // buttonEnd
             // 
-            this.buttonEnd.Location = new System.Drawing.Point(584, 173);
+            this.buttonEnd.Location = new System.Drawing.Point(584, 180);
             this.buttonEnd.Name = "buttonEnd";
             this.buttonEnd.Size = new System.Drawing.Size(62, 28);
             this.buttonEnd.TabIndex = 42;
@@ -653,7 +653,7 @@
             // pictureBox7
             // 
             this.pictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox7.Location = new System.Drawing.Point(628, 687);
+            this.pictureBox7.Location = new System.Drawing.Point(628, 694);
             this.pictureBox7.Name = "pictureBox7";
             this.pictureBox7.Size = new System.Drawing.Size(120, 80);
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -665,7 +665,7 @@
             // pictureBox6
             // 
             this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox6.Location = new System.Drawing.Point(508, 687);
+            this.pictureBox6.Location = new System.Drawing.Point(508, 694);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(120, 80);
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -677,7 +677,7 @@
             // pictureBox5
             // 
             this.pictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox5.Location = new System.Drawing.Point(388, 687);
+            this.pictureBox5.Location = new System.Drawing.Point(388, 694);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(120, 80);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -689,7 +689,7 @@
             // pictureBox4
             // 
             this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox4.Location = new System.Drawing.Point(268, 687);
+            this.pictureBox4.Location = new System.Drawing.Point(268, 694);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(120, 80);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -701,7 +701,7 @@
             // pictureBox3
             // 
             this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox3.Location = new System.Drawing.Point(148, 687);
+            this.pictureBox3.Location = new System.Drawing.Point(148, 694);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(120, 80);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -713,7 +713,7 @@
             // pictureBox2
             // 
             this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Location = new System.Drawing.Point(28, 687);
+            this.pictureBox2.Location = new System.Drawing.Point(28, 694);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(120, 80);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -764,7 +764,7 @@
             // button4
             // 
             this.button4.Image = global::ENTcapture.Properties.Resources.stop32;
-            this.button4.Location = new System.Drawing.Point(336, 173);
+            this.button4.Location = new System.Drawing.Point(336, 180);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(53, 28);
             this.button4.TabIndex = 8;
@@ -774,7 +774,7 @@
             // button3
             // 
             this.button3.Image = global::ENTcapture.Properties.Resources.playpause1;
-            this.button3.Location = new System.Drawing.Point(395, 173);
+            this.button3.Location = new System.Drawing.Point(395, 180);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(53, 28);
             this.button3.TabIndex = 9;
@@ -793,7 +793,7 @@
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(28, 201);
+            this.pictureBox1.Location = new System.Drawing.Point(28, 212);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(720, 480);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -807,7 +807,7 @@
             // pictureBoxBar
             // 
             this.pictureBoxBar.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBoxBar.Location = new System.Drawing.Point(28, 132);
+            this.pictureBoxBar.Location = new System.Drawing.Point(28, 120);
             this.pictureBoxBar.Name = "pictureBoxBar";
             this.pictureBoxBar.Size = new System.Drawing.Size(720, 12);
             this.pictureBoxBar.TabIndex = 40;
@@ -842,7 +842,7 @@
             // 
             this.labelFrames.AutoSize = true;
             this.labelFrames.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFrames.Location = new System.Drawing.Point(235, 177);
+            this.labelFrames.Location = new System.Drawing.Point(266, 189);
             this.labelFrames.Name = "labelFrames";
             this.labelFrames.Size = new System.Drawing.Size(26, 12);
             this.labelFrames.TabIndex = 50;
