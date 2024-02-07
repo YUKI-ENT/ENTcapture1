@@ -26,5 +26,5 @@ ENTcaptureは、DirectShow対応ビデオキャプチャーデバイスから動
 - キー割り当てのできるものならフットスイッチで静止画保存が可能
 - 描画、録画、フィルタ適用は非同期マルチスレッド処理とダブルバッファにしているので、スレッド数の多いCPUやメモリが多いほど安定して動作するはずです
 ## リンク
-- 開発元：https://yuuki-jibika.com/software/entcapture.html
+- 開発元・旧バージョンや説明：https://yuuki-jibika.com/software/entcapture.html
 
