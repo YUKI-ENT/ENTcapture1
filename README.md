@@ -3,7 +3,7 @@
 ENTcaptureは、DirectShow対応ビデオキャプチャーデバイスから動画や静止画をキャプチャするツールです。RSBaseとの連携を前提に作られています。
 
 ## 動作概要のデモ
-[![紹介動画](https://img.youtube.com/vi/gKA60FDcURs/mqdefault.jpg)](https://youtu.be/gKA60FDcURs)
+[![紹介動画](https://img.youtube.com/vi/gKA60FDcURs/mqdefault.jpg)](https://youtu.be/49kGP-nwlqU)
 
 ## 対応環境
 - Windows7、8.1、10、11 (64bit/32bit)
