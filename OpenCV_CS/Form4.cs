@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ENTcapture
@@ -11,6 +13,7 @@ namespace ENTcapture
         private long targetSize, orgSize;
         TimeSpan videoLength;
         private int totalFrames, startFlame, endFrame;
+        private Form1 form1;
 
         public Form4()
         {
@@ -24,16 +27,17 @@ namespace ENTcapture
 
         private void Form4_Load(object sender, EventArgs e)
         {
-            inputFile = ((Form1)this.Owner).videofile;
+            form1 = (Form1)this.Owner;
+            inputFile = form1.videofile;
             this.labelFilename.Text = inputFile;
             FileInfo f = new FileInfo(inputFile);
-            totalFrames = ((Form1)this.Owner).total_frames;
-            startFlame = ((Form1)this.Owner).frame_start;
-            endFrame = ((Form1)this.Owner).frame_end;
+            totalFrames = form1.total_frames;
+            startFlame = form1.frame_start;
+            endFrame = form1.frame_end;
 
             orgSize = f.Length;
             //ファイルサイズ長さ取得、ビットレート計算
-            string strDuration = ((Form1)this.Owner).GetMovieDurationText(inputFile);
+            string strDuration = form1.GetMovieDurationText(inputFile);
             // TimeSpanに変換
             videoLength = TimeSpan.Parse(strDuration);
 
@@ -91,7 +95,7 @@ namespace ENTcapture
             this.numericUpDownComp.Value = trackBarComp.Value;
         }
 
-        private void buttonCompress_Click(object sender, EventArgs e)
+        private async void buttonCompress_Click(object sender, EventArgs e)
         {
             try
             {
@@ -99,36 +103,43 @@ namespace ENTcapture
 
                 if (result == DialogResult.OK)
                 {
-                    //var process = Process.Start(new ProcessStartInfo("ffmpeg.exe", textBoxCommandline.Text)
-                    //{
-                    //    CreateNoWindow = false,
-                    //    UseShellExecute = true,
-                    //});
-
-                    //process.WaitForExit();
-                    ////MessageBox.Show("変換作業が終了しました");
-
-                    var p = new Process();
-                    p.StartInfo.FileName = "ffmpeg.exe";
-                    p.StartInfo.Arguments = textBoxCommandline.Text;
-                    p.StartInfo.CreateNoWindow = false;
-                    p.StartInfo.UseShellExecute = true;
-                    p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                    //               p.StartInfo.RedirectStandardError = true;
-                    p.StartInfo.ErrorDialog = true;
-
-                    p.SynchronizingObject = this;
-                    p.Exited += (s, args) =>
+                   
+                    ProcessStartInfo startInfo = new ProcessStartInfo
                     {
-                        MessageBox.Show("エンコード終了しました");
-                        p.Dispose();
-                        //rsb_reload();
-                        
+                        FileName = "ffmpeg.exe",
+                        Arguments = textBoxCommandline.Text,
+                        CreateNoWindow = false,
+                        UseShellExecute = true,
+                        WindowStyle = ProcessWindowStyle.Normal,
+                        ErrorDialog = true
                     };
-                    p.EnableRaisingEvents = true;
-                    p.Start();
 
-                    this.Close();
+                    using (Process process = new Process { StartInfo = startInfo })
+                    {
+                        process.EnableRaisingEvents = true;
+                        process.SynchronizingObject = this;
+                        var tcs = new TaskCompletionSource<object>();
+
+                        process.Exited += (s, args) =>
+                        {
+                            tcs.SetResult(null);
+                            this.Close();
+                        };
+
+                        
+                        process.Start();
+                        await tcs.Task; // プロセスの終了を非同期的に待機します
+                    }
+
+                    MessageBox.Show("エンコード終了しました");
+
+                    if (form1 != null)
+                    {
+                        // Form1をアクティブにし、最前面に表示します
+                        form1.Activate();
+                        form1.TopMost = true;
+                        form1.TopMost = false; // 最前面表示を解除することで、フォーカスを移動させる
+                    }
                 }
             }
             catch (Exception ex)

@@ -99,6 +99,7 @@
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
+            this.toolStripOpenLogFile = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -127,7 +128,7 @@
             // labelMessage
             // 
             this.labelMessage.AutoSize = true;
-            this.labelMessage.Location = new System.Drawing.Point(17, 100);
+            this.labelMessage.Location = new System.Drawing.Point(17, 110);
             this.labelMessage.Name = "labelMessage";
             this.labelMessage.Size = new System.Drawing.Size(67, 12);
             this.labelMessage.TabIndex = 5;
@@ -147,7 +148,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(17, 74);
+            this.label2.Location = new System.Drawing.Point(17, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(16, 12);
             this.label2.TabIndex = 10;
@@ -157,7 +158,7 @@
             // 
             this.labelFPS.AutoSize = true;
             this.labelFPS.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFPS.Location = new System.Drawing.Point(77, 189);
+            this.labelFPS.Location = new System.Drawing.Point(55, 189);
             this.labelFPS.Name = "labelFPS";
             this.labelFPS.Size = new System.Drawing.Size(26, 12);
             this.labelFPS.TabIndex = 17;
@@ -172,7 +173,7 @@
             // 
             this.labelTime.AutoSize = true;
             this.labelTime.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTime.Location = new System.Drawing.Point(170, 189);
+            this.labelTime.Location = new System.Drawing.Point(148, 189);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(26, 12);
             this.labelTime.TabIndex = 20;
@@ -181,7 +182,7 @@
             // trackBar1
             // 
             this.trackBar1.LargeChange = 30;
-            this.trackBar1.Location = new System.Drawing.Point(28, 132);
+            this.trackBar1.Location = new System.Drawing.Point(28, 137);
             this.trackBar1.Maximum = 10000;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(720, 45);
@@ -198,7 +199,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(109, 74);
+            this.label3.Location = new System.Drawing.Point(109, 70);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 12);
             this.label3.TabIndex = 28;
@@ -207,7 +208,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(260, 74);
+            this.label4.Location = new System.Drawing.Point(260, 70);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 30;
@@ -216,7 +217,7 @@
             // comboBoxTest
             // 
             this.comboBoxTest.FormattingEnabled = true;
-            this.comboBoxTest.Location = new System.Drawing.Point(307, 71);
+            this.comboBoxTest.Location = new System.Drawing.Point(307, 67);
             this.comboBoxTest.Name = "comboBoxTest";
             this.comboBoxTest.Size = new System.Drawing.Size(105, 20);
             this.comboBoxTest.TabIndex = 2;
@@ -290,7 +291,8 @@
             this.toolStripSeparator1,
             this.toolStripButtonSettings,
             this.toolStripSeparator2,
-            this.toolStripButtonVersion});
+            this.toolStripButtonVersion,
+            this.toolStripOpenLogFile});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(930, 25);
@@ -354,7 +356,7 @@
             // checkBoxVideo
             // 
             this.checkBoxVideo.AutoSize = true;
-            this.checkBoxVideo.Location = new System.Drawing.Point(308, 96);
+            this.checkBoxVideo.Location = new System.Drawing.Point(307, 90);
             this.checkBoxVideo.Name = "checkBoxVideo";
             this.checkBoxVideo.Size = new System.Drawing.Size(106, 16);
             this.checkBoxVideo.TabIndex = 39;
@@ -374,7 +376,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(522, 180);
+            this.buttonStart.Location = new System.Drawing.Point(522, 183);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(62, 28);
             this.buttonStart.TabIndex = 41;
@@ -384,7 +386,7 @@
             // 
             // buttonEnd
             // 
-            this.buttonEnd.Location = new System.Drawing.Point(584, 180);
+            this.buttonEnd.Location = new System.Drawing.Point(584, 183);
             this.buttonEnd.Name = "buttonEnd";
             this.buttonEnd.Size = new System.Drawing.Size(62, 28);
             this.buttonEnd.TabIndex = 42;
@@ -626,7 +628,7 @@
             // checkBoxNorec
             // 
             this.checkBoxNorec.AutoSize = true;
-            this.checkBoxNorec.Location = new System.Drawing.Point(213, 96);
+            this.checkBoxNorec.Location = new System.Drawing.Point(212, 90);
             this.checkBoxNorec.Name = "checkBoxNorec";
             this.checkBoxNorec.Size = new System.Drawing.Size(89, 16);
             this.checkBoxNorec.TabIndex = 46;
@@ -764,7 +766,7 @@
             // button4
             // 
             this.button4.Image = global::ENTcapture.Properties.Resources.stop32;
-            this.button4.Location = new System.Drawing.Point(336, 180);
+            this.button4.Location = new System.Drawing.Point(344, 183);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(53, 28);
             this.button4.TabIndex = 8;
@@ -774,7 +776,7 @@
             // button3
             // 
             this.button3.Image = global::ENTcapture.Properties.Resources.playpause1;
-            this.button3.Location = new System.Drawing.Point(395, 180);
+            this.button3.Location = new System.Drawing.Point(403, 183);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(53, 28);
             this.button3.TabIndex = 9;
@@ -783,7 +785,7 @@
             // 
             // pictureBoxState
             // 
-            this.pictureBoxState.Location = new System.Drawing.Point(420, 79);
+            this.pictureBoxState.Location = new System.Drawing.Point(431, 79);
             this.pictureBoxState.Name = "pictureBoxState";
             this.pictureBoxState.Size = new System.Drawing.Size(36, 36);
             this.pictureBoxState.TabIndex = 19;
@@ -807,7 +809,7 @@
             // pictureBoxBar
             // 
             this.pictureBoxBar.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBoxBar.Location = new System.Drawing.Point(28, 120);
+            this.pictureBoxBar.Location = new System.Drawing.Point(28, 125);
             this.pictureBoxBar.Name = "pictureBoxBar";
             this.pictureBoxBar.Size = new System.Drawing.Size(720, 12);
             this.pictureBoxBar.TabIndex = 40;
@@ -817,7 +819,7 @@
             // 
             this.comboBoxID.FormattingEnabled = true;
             this.comboBoxID.IntegralHeight = false;
-            this.comboBoxID.Location = new System.Drawing.Point(39, 71);
+            this.comboBoxID.Location = new System.Drawing.Point(39, 67);
             this.comboBoxID.MaxDropDownItems = 12;
             this.comboBoxID.Name = "comboBoxID";
             this.comboBoxID.Size = new System.Drawing.Size(64, 20);
@@ -830,7 +832,7 @@
             // 
             this.comboBoxName.FormattingEnabled = true;
             this.comboBoxName.IntegralHeight = false;
-            this.comboBoxName.Location = new System.Drawing.Point(148, 71);
+            this.comboBoxName.Location = new System.Drawing.Point(148, 67);
             this.comboBoxName.MaxDropDownItems = 12;
             this.comboBoxName.Name = "comboBoxName";
             this.comboBoxName.Size = new System.Drawing.Size(100, 20);
@@ -842,11 +844,22 @@
             // 
             this.labelFrames.AutoSize = true;
             this.labelFrames.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFrames.Location = new System.Drawing.Point(266, 189);
+            this.labelFrames.Location = new System.Drawing.Point(229, 189);
             this.labelFrames.Name = "labelFrames";
             this.labelFrames.Size = new System.Drawing.Size(26, 12);
             this.labelFrames.TabIndex = 50;
             this.labelFrames.Text = "0/0";
+            // 
+            // toolStripOpenLogFile
+            // 
+            this.toolStripOpenLogFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripOpenLogFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenLogFile.Image")));
+            this.toolStripOpenLogFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripOpenLogFile.Name = "toolStripOpenLogFile";
+            this.toolStripOpenLogFile.Size = new System.Drawing.Size(23, 22);
+            this.toolStripOpenLogFile.Text = "toolStripButton1";
+            this.toolStripOpenLogFile.ToolTipText = "logファイルを開く";
+            this.toolStripOpenLogFile.Click += new System.EventHandler(this.toolStripOpenLogFile_Click);
             // 
             // Form1
             // 
@@ -996,6 +1009,7 @@
         public System.Windows.Forms.ComboBox comboBoxName;
         public System.Windows.Forms.ComboBox comboBoxID;
         private System.Windows.Forms.Label labelFrames;
+        private System.Windows.Forms.ToolStripButton toolStripOpenLogFile;
     }
 }
 

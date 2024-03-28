@@ -22,6 +22,7 @@ using Npgsql;
 using OpenCvSharp.Extensions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Reflection.Emit;
+using System.Security.Policy;
 
 namespace ENTcapture
 {
@@ -80,8 +81,8 @@ namespace ENTcapture
         private int cvoutfps = 0, presetFPS = 0;
         //private Bitmap imgout;
         // ビットマップの配列を宣言
-        private int BUFFERNUMBER = 2;
-        private Bitmap[] bmpBuffer = new Bitmap[2];
+        private int BUFFERNUMBER = 4;
+        private Bitmap[] bmpBuffer = new Bitmap[4];
         private int bufferIndex = 0;
         Stopwatch sw = new Stopwatch();
 
@@ -91,6 +92,11 @@ namespace ENTcapture
         private GlobalKeyboardHook keyboardHook;
         private bool pressedCtrl=false, pressedShift=false;
         private Keys charSnapKey, charStartKey;
+
+        //Log
+        private string LogFile;
+
+        static Semaphore semaphore = new Semaphore(2, 2); // 初期化時に2つのスロットを持つ Semaphore オブジェクトを作成します
 
         public Form1()
         {
@@ -117,6 +123,7 @@ namespace ENTcapture
             keyboardHook.KeyDown += KeyboardHook_KeyDown;
             keyboardHook.KeyUp += KeyboardHook_KeyUp;
 
+            
         }
 
         private async void button1_Click(object sender, EventArgs e) //再生
@@ -181,6 +188,8 @@ namespace ENTcapture
         {
             Debug.WriteLine("readVideoAsync is called.");
 
+            semaphore.WaitOne(); // semaphore から排他的なアクセス権を取得します
+
             using (var vcap = new VideoCapture(file))
             using (var m = new Mat())
             {
@@ -208,8 +217,9 @@ namespace ENTcapture
                             {
                                 if (lockBmp)
                                 {
-                                    message = string.Format("フレームスキップしました");
+                                    message = string.Format("再生中フレームスキップしました");
                                     t = 0;
+                                    LogEvents(message + " Frame:" + current_frame.ToString());
                                     return;
                                 }
 
@@ -257,8 +267,9 @@ namespace ENTcapture
                                 {
                                     if (lockBmp)
                                     {
-                                        message = string.Format("フレームスキップしました");
+                                        message = string.Format("サーチ中フレームスキップしました");
                                         t = 0;
+                                        LogEvents(message + " Frame:" + current_frame.ToString());
                                         return;
                                     }
 
@@ -291,6 +302,7 @@ namespace ENTcapture
                 catch (Exception e)
                 {
                     MessageBox.Show(e.ToString());
+                    LogError(e);
                 }
                 finally
                 {
@@ -298,11 +310,12 @@ namespace ENTcapture
                     drawStatus(0);
                     vcap.Dispose();
                     m.Dispose();//Memory release
+                    semaphore.Release(); // semaphore の排他的なアクセス権を解放します
                 }
             }
         }
 
-        private async void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e) //開始終了ボタン
         {
             try
             {
@@ -338,6 +351,8 @@ namespace ENTcapture
 
                         connectVideo();
                         videoSource.VideoResolution = videoCapabilities[toolStripComboBoxResolution.SelectedIndex];
+
+                        LogEvents("[録画開始] Device:" + videoDevices[toolStripComboDevices.SelectedIndex].Name + "/" + toolStripComboBoxResolution.Text);
 
                         videoSource.NewFrame += new NewFrameEventHandler(videoRendering);
 
@@ -385,42 +400,44 @@ namespace ENTcapture
                             //acout.Dispose();
                             rec_state = false;
 
+                            LogEvents("[録画終了] Drop frames:" + SkippedFrames.ToString() + "/Total frames:" + TotalFrames.ToString());
+
+                            
+                            // 複数の非同期処理を同時に開始
+                            List<Task> tasks = new List<Task>();
+
                             // 動画保存の場合は出力フォルダーにコピー
                             if (this.checkBoxVideo.Checked)
                             {
-                                var f = new FileInfo(videofile);
-                                string fn = f.Name;
-                                string outfile = Properties.Settings.Default.outdir + "\\" + fn;
-                                //Fileが大きければ再エンコード
-                                if (Properties.Settings.Default.encodesize > 0 && f.Length >= (Properties.Settings.Default.encodesize * 1000000))
-                                {
-
-                                    EncodeMovie(f.FullName, Properties.Settings.Default.outdir, Properties.Settings.Default.encodesize, Properties.Settings.Default.recodec);
-                                    //  this.buttonFFmpeg.PerformClick();
-                                }
-                                else
-                                {
-                                    f.CopyTo(outfile, true);
-                                    rsb_reload();
-                                }
-                                //MessageBox.Show("動画をファイリングします");
+                                Task encodeTask = EncodeAndRSB(videofile);
+                                //await encodeTask;
+                                tasks.Add(encodeTask);
                             }
                             else
                             {
-                                rsb_reload();
+                                Task rsbTask = Rsb_reload();
+                                //await rsbTask;
+                                tasks.Add(rsbTask);
                             }
-
-
                             //録画したファイルをロードする
                             playmode = 3; //再生中 0:stop,1:recstandby, 2:rec, 3:play, 4:pause
                             trackBar1.Value = 0;
 
-                            await playVideoAsync(videofile);
+                            this.Activate();
+                            this.BringToFront();
+
+                            Task playTask = playVideoAsync(videofile);
+                            tasks.Add(playTask);
+
+                            // すべてのタスクが完了するのを待つ
+                            await Task.WhenAll(tasks);
+                            
+                            //await playVideoAsync(videofile);
 
                         }
                         else //プレビューのみの場合
                         {
-                            rsb_reload();
+                            await Rsb_reload();
                         }
                     }
                 }
@@ -428,6 +445,8 @@ namespace ENTcapture
             catch (Exception other)
             {
                 MessageBox.Show("キャプチャデバイス操作時にエラーが発生しました。" + other.Message);
+                LogError(other);
+
                 button2.Text = CaptureButtonOn;
                 drawStatus(0);
                 ctlLock(9);
@@ -466,6 +485,29 @@ namespace ENTcapture
             mode = 0;
         }
 
+        private async Task EncodeAndRSB(string videoFile)
+        {
+            var f = new FileInfo(videofile);
+            string fn = f.Name;
+            string outfile = Properties.Settings.Default.outdir + "\\" + fn;
+            //Fileが大きければ再エンコード
+            if (Properties.Settings.Default.encodesize > 0 && f.Length >= (Properties.Settings.Default.encodesize * 1000000))
+            {
+                LogEvents("ファイルが指定サイズより大きいので再エンコードを行います");
+
+                await EncodeMovie(f.FullName, Properties.Settings.Default.outdir, Properties.Settings.Default.encodesize, Properties.Settings.Default.recodec);
+                await Rsb_reload();
+                //  this.buttonFFmpeg.PerformClick();
+            }
+            else
+            {
+                LogEvents("動画ファイルをRSBASEに出力しました");
+                f.CopyTo(outfile, true);
+                await Rsb_reload();
+            }
+            //MessageBox.Show("動画をファイリングします");
+        }
+
 
         // カメラ情報の取得
         private void getCameraInfo()
@@ -485,6 +527,7 @@ namespace ENTcapture
                     // カメラデバイスの一覧をコンボボックスに追加
                     toolStripComboDevices.Items.Add(device.Name);
                     DeviceExist = true;
+                    LogEvents($"ビデオデバイス{device.Name}を一覧に追加しました");
 
                     //VideoCapabilityの取得
                     videoSource = new VideoCaptureDevice(device.MonikerString);
@@ -501,8 +544,10 @@ namespace ENTcapture
                 }
                 toolStripComboDevices.SelectedIndex = 0;
             }
-            catch (ApplicationException)
+            catch (Exception ex)
             {
+                LogError(ex);
+
                 DeviceExist = false;
                 toolStripComboDevices.Items.Add("ビデオデバイスがありません");
             }
@@ -527,8 +572,9 @@ namespace ENTcapture
             if (lockBmp)
             {
                 SkippedFrames++;
-                message = string.Format("フレームスキップしました");
+                message = string.Format("取込中フレームスキップしました");
                 t = 0;
+                LogEvents(message + " Frame:" + TotalFrames.ToString());
                 return;
             }
             else
@@ -624,6 +670,8 @@ namespace ENTcapture
             }
             catch (Exception e)
             {
+                LogError(e);
+
                 MessageBox.Show("録画処理中にエラーが発生しました\r\n" + e.ToString());
 
                 drawStatus(0);
@@ -717,8 +765,10 @@ namespace ENTcapture
                 bufferIndex++;
                 if (bufferIndex >= BUFFERNUMBER) bufferIndex = 0;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                LogError(e);
+
                 message = "ビデオフレーム処理中にエラーが発生しました";
                 t = 0;
             }
@@ -738,12 +788,14 @@ namespace ENTcapture
                 videoSource = null;
                 pictureBox1.Image = null;
             } catch (Exception e){
+                LogError(e);
+
                 MessageBox.Show("終了時にエラーが発生しました。:" + e.ToString());            
             }
         }
 
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             Debug.WriteLine("Formのロード開始");
             if (Properties.Settings.Default.F1size.Width == 0 || Properties.Settings.Default.F1size.Height == 0)
@@ -768,6 +820,23 @@ namespace ENTcapture
             loadFilter();
 
             this.timer1.Enabled = true;
+
+            //古いログの削除
+            DateTime cutoffDate = DateTime.Now.AddDays(-14);
+            try
+            {
+                if (File.Exists(LogFile))
+                {
+                    await RemoveOldLogs(LogFile, cutoffDate);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+            
+            LogEvents("[アプリケーションの開始] Entcaptureを起動しました");
+
         }
 
         private void initForm()
@@ -787,6 +856,8 @@ namespace ENTcapture
                 {
                     this.fileSystemWatcher1.EnableRaisingEvents = false;
                 }
+
+                LogFile = Properties.Settings.Default.tmpdir + "\\Entcapture.log";
 
                 getThept();
                 this.comboBoxID.Text = PtID;
@@ -840,6 +911,7 @@ namespace ENTcapture
 
                 checkBoxNorec.Checked = Properties.Settings.Default.norec;
 
+                
                 drawStatus(0);
 
                 if (!Directory.Exists(Properties.Settings.Default.outdir))
@@ -850,6 +922,8 @@ namespace ENTcapture
             }
             catch (Exception ex)
             {
+                LogError(ex);
+
                 MessageBox.Show(ex.ToString());
             }
 
@@ -1474,7 +1548,7 @@ namespace ENTcapture
             f.Dispose();
         }
 
-        private void buttonExit_Click(object sender, EventArgs e)
+        private async void buttonExit_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1483,10 +1557,13 @@ namespace ENTcapture
             }
             catch (Exception ex)
             {
+                LogError(ex);
+
                 Debug.Write(ex.ToString());
             }
             finally
             {
+                await LogEvents("[アプリケーションの終了] Entcaptureを終了しました");
                 Application.Exit();
             }
         }
@@ -1543,10 +1620,12 @@ namespace ENTcapture
                             if (!File.Exists(snapFile)) break;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         keydown = false;
                         sw.Stop();
+
+                        LogError(ex);
 
                         MessageBox.Show("Snapファイルの作成時にエラーが発生しました。もう一度静止画取得を試みてください。");
                         lockBmp = false;
@@ -1616,6 +1695,8 @@ namespace ENTcapture
                     {
                         keydown = false;
                         sw.Stop();
+                        
+                        LogError(ex);
 
                         MessageBox.Show("画像切り出し、文字埋込みでエラーが発生しました: " + ex.ToString());
                         lockBmp = false;
@@ -1626,10 +1707,12 @@ namespace ENTcapture
                     {
                         SaveImage(saveimg, snapFile, jpeg_quality);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         keydown = false;
                         sw.Stop();
+
+                        LogError(ex);
 
                         MessageBox.Show("画像保存でエラーが発生しました");
                         lockBmp = false;
@@ -1644,10 +1727,12 @@ namespace ENTcapture
                         if (pictureBox3.Image != null) await Task.Run(() => SwapImage(pictureBox4, (Image)pictureBox3.Image.Clone()));
                         if (pictureBox2.Image != null) await Task.Run(() => SwapImage(pictureBox3, (Image)pictureBox2.Image.Clone()));
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         keydown = false;
                         sw.Stop();
+
+                        LogError(ex);
 
                         MessageBox.Show("PictureboxのDispose処理でエラーが発生しました");
                         lockBmp = false;
@@ -1659,10 +1744,12 @@ namespace ENTcapture
                         await Task.Run(() => SwapImage(pictureBox2, (Image)saveimg.Clone()));
                         //pictureBox2.Image = (Image)saveimg.Clone();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         keydown = false;
                         sw.Stop();
+
+                        LogError(ex);
 
                         MessageBox.Show("Picturebox2の表示でエラーが発生しました");
                         lockBmp = false;
@@ -1674,10 +1761,12 @@ namespace ENTcapture
                         saveimg.Dispose();
                         imgsnap.Dispose();
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         keydown = false;
                         sw.Stop();
+
+                        LogError(ex);
 
                         MessageBox.Show("最終のDispose処理でエラーが発生しました");
                         lockBmp = false;
@@ -1688,9 +1777,12 @@ namespace ENTcapture
 
                     message = "Snap is saved as " + snapFile;
                     t = 0;
+
+                    LogEvents("静止画キャプチャしました。ファイル名:" + snapFile);
                 }
             }
             lockBmp = false;
+            
         }
 
         private void buttonFFmpeg_Click(object sender, EventArgs e)
@@ -1828,7 +1920,7 @@ namespace ENTcapture
         /// </summary>
         /// <param name="fileName">変換する画像ファイル名</param>
         /// <param name="quality">品質</param>
-        private static void SaveImage(Bitmap bmp, string fileName, int quality)
+        private void SaveImage(Bitmap bmp, string fileName, int quality)
         {
             try
             {
@@ -1852,9 +1944,12 @@ namespace ENTcapture
 
                 eps.Dispose();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogError(ex);
+
                 MessageBox.Show("Jpegファイルの保存に失敗しました");
+
             }
         }
 
@@ -2054,6 +2149,9 @@ namespace ENTcapture
             catch (Exception ex)
             {
                 formDisp.Close();
+
+                LogError(ex);
+
                 MessageBox.Show(ex.ToString());
             }
         }
@@ -2200,6 +2298,8 @@ namespace ENTcapture
                     catch (Exception ex)
                     {
                         conn.Close();
+                        LogError(ex);
+
                         MessageBox.Show("PostgreSQLサーバーへの接続に失敗しました。PostgreSQLのサーバーアドレスを確認してください。\n" + ex.ToString());
                     }
                 }
@@ -2337,21 +2437,52 @@ namespace ENTcapture
 
         }
 
+        private void toolStripOpenLogFile_Click(object sender, EventArgs e)
+        {
+            // ファイルが存在するかどうかをチェックします
+            if (File.Exists(LogFile))
+            {
+                try
+                {
+                    // ファイルを関連付けられたアプリケーションで開きます
+                    Process.Start(LogFile);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("ログファイルを開くのに失敗しました");
+                }
+            }
+
+            else
+            {
+                // ファイルが存在しない場合はエラーメッセージを出力します
+                MessageBox.Show("ログファイルが見つかりませんでした");
+            }
+        }
+
         private void deleteOldFiles(int days, string foldername)
         {
             if (days > 0)
             {
-                DirectoryInfo dyInfo = new DirectoryInfo(foldername);
-                // フォルダのファイルを取得
-                var target = DateTime.Today.AddDays(-days);
-                foreach (FileInfo fInfo in dyInfo.GetFiles())
+                try
                 {
-                    // 日付の比較
-                    if (fInfo.LastWriteTime < target && (fInfo.Extension == ".mp4" || fInfo.Extension == ".avi"))
+                    LogEvents("古い一時ファイルを削除します");
+
+                    DirectoryInfo dyInfo = new DirectoryInfo(foldername);
+                    // フォルダのファイルを取得
+                    var target = DateTime.Today.AddDays(-days);
+                    foreach (FileInfo fInfo in dyInfo.GetFiles())
                     {
-                        Debug.WriteLine(string.Format("Deleted old file :{0}", fInfo.Name));
-                        fInfo.Delete();
+                        // 日付の比較
+                        if (fInfo.LastWriteTime < target && (fInfo.Extension == ".mp4" || fInfo.Extension == ".avi"))
+                        {
+                            LogEvents(string.Format("Deleted old file :{0}", fInfo.Name));
+                            fInfo.Delete();
+                        }
                     }
+                }
+                catch(Exception ex) {
+                    LogError(ex);
                 }
             }
         }
@@ -2368,10 +2499,13 @@ namespace ENTcapture
             return strDuration;
         }
 
-        private void EncodeMovie(string inputFile, string outDir, int sizeMB, string codec)
+        private async Task EncodeMovie(string inputFile, string outDir, int sizeMB, string codec)
         {
+            semaphore.WaitOne(); // semaphore から排他的なアクセス権を取得します
+
             try
             {
+                LogEvents("エンコード処理を開始します");
                 //Stop camera
                 this.CloseVideoSource();
 
@@ -2409,55 +2543,83 @@ namespace ENTcapture
                 message = arg;
                 t = 0;
 
-
-                var p = new Process();
-                p.StartInfo.FileName = "ffmpeg.exe";
-                p.StartInfo.Arguments = arg;
-                p.StartInfo.CreateNoWindow = false;
-                p.StartInfo.UseShellExecute = true;
-                p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                //               p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.ErrorDialog = true;
-
-                p.SynchronizingObject = this;
-                p.Exited += (sender, args) =>
+       
+                ProcessStartInfo startInfo = new ProcessStartInfo
                 {
-                    //                                      MessageBox.Show("変換終了");
-                    p.Dispose();
-                    rsb_reload();
+                    FileName = "ffmpeg.exe",
+                    Arguments = arg,
+                    CreateNoWindow = false,
+                    UseShellExecute = true,
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    ErrorDialog = true
                 };
-                p.EnableRaisingEvents = true;
-                p.Start();
 
-                //p.WaitForExit();
-                //rsb_reload();
+                using (Process process = new Process { StartInfo = startInfo })
+                {
+                    process.EnableRaisingEvents = true;
+                    process.SynchronizingObject = this;
+                    var tcs = new TaskCompletionSource<object>();
+
+                    process.Exited += (sender, args) =>
+                    {
+                        tcs.SetResult(null);
+                    };
+
+                    LogEvents("ffmpegのプロセスを開始します");
+                    process.Start();
+                    await tcs.Task; // プロセスの終了を非同期的に待機します
+                }
+
+                LogEvents("エンコード処理が終了しました");
+                //Rsb_reload();
 
             }
             catch (Exception ex)
             {
+                LogError(ex);
+
                 MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                semaphore.Release(); // semaphore の排他的なアクセス権を解放します
             }
         }
 
-        private void rsb_reload()
+        private  async Task Rsb_reload()
         {
-            //RSB filing
-            if (Properties.Settings.Default.autofiling && System.IO.Directory.EnumerateFileSystemEntries(Properties.Settings.Default.outdir, "*~*~*~*~RSB.*").Any())
+            try
             {
-                string target = "";
-
-                if (Properties.Settings.Default.rsbcamera)
+                //RSB filing
+                if (Properties.Settings.Default.autofiling && System.IO.Directory.EnumerateFileSystemEntries(Properties.Settings.Default.outdir, "*~*~*~*~RSB.*").Any())
                 {
-                    target = "http://localhost/~rsn/RSB_movie.cgi?sentaku";
-                }
-                else
-                {
-                    //                   target = "http://localhost/~rsn/2000.cgi?rs_base=";
-                    target = Properties.Settings.Default.rsbaseurl;
-                }
+                    await LogEvents("RSBファイリングを開始しました");
 
-                System.Diagnostics.Process.Start(target);
-                //               MessageBox.Show("動画をファイリングしました");
+                    string target = "";
+
+                    if (Properties.Settings.Default.rsbcamera)
+                    {
+                        target = "http://localhost/~rsn/RSB_movie.cgi?sentaku";
+                    }
+                    else
+                    {
+                        target = Properties.Settings.Default.rsbaseurl;
+                    }
+
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = target,
+                        UseShellExecute = true
+                    };
+
+                    Process.Start(startInfo);
+                    await LogEvents("RSBファイリングを完了しました");
+                }
+            }
+            catch(Exception ex)
+            {
+                LogError(ex);
+                MessageBox.Show("RSBaseファイリング時にエラーが発生しました");
             }
 
         }
@@ -2540,6 +2702,8 @@ namespace ENTcapture
             }
             catch (Exception ex)
             {
+                LogError(ex);
+
                 MessageBox.Show(ex.ToString());
             }
         }
@@ -2569,6 +2733,8 @@ namespace ENTcapture
                     }
                     catch (Exception ex)
                     {
+                        LogError(ex);
+
                         MessageBox.Show("Error in ApplyWBasync:" + ex.ToString());
                     }
                 });
@@ -2588,6 +2754,8 @@ namespace ENTcapture
                     }
                     catch (Exception ex)
                     {
+                        LogError(ex);
+
                         MessageBox.Show("Error in ApplyGammaAsync:" + ex.ToString());
                     }
                 });
@@ -2615,8 +2783,10 @@ namespace ENTcapture
 
                 g.Dispose();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogError(ex);
+
                 MessageBox.Show("DrawResionでエラーが発生しました");
             }
         }
@@ -2643,8 +2813,9 @@ namespace ENTcapture
                 pictureBox.Image = newImage;
                 oldImg?.Dispose();
             } 
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogError(ex);
                 //MessageBox.Show(ex.ToString());
                 message = "描画中にエラーが発生しました";
                 t = 0;
@@ -2711,6 +2882,126 @@ namespace ENTcapture
         {
             if(inputKey == Keys.LControlKey || inputKey == Keys.RControlKey || inputKey == Keys.Control ) pressedCtrl  = Down;
             if(inputKey == Keys.LShiftKey || inputKey == Keys.RShiftKey || inputKey == Keys.ShiftKey)   pressedShift = Down;
+        }
+
+        public async void LogError(Exception ex)
+        {
+            try
+            {
+                // エラーログを書き込む
+                using (StreamWriter writer = new StreamWriter(LogFile, append: true))
+                {
+                    await writer.WriteLineAsync($"{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}-[Error]:{ex.Message}");
+                    await writer.WriteLineAsync($"{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}-[StackTrace]: {ex.StackTrace}");
+                    //await writer.WriteLineAsync(); // 空行を追加して区切ります
+                }
+
+                Console.WriteLine("エラーが発生しました。ログファイルに書き込まれました。");
+            }
+            catch (Exception logEx)
+            {
+                // ログの書き込み中にエラーが発生した場合の処理
+                Console.WriteLine("ログの書き込み中にエラーが発生しました。");
+                Console.WriteLine($"ログエラー: {logEx.Message}");
+            }
+        }
+
+        public async Task LogEvents(string logMessage)
+        {
+            try
+            {
+                // ログを書き込む
+                using (StreamWriter writer = new StreamWriter(LogFile, append: true))
+                {
+                    await writer.WriteLineAsync($"{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}-[Events]:{logMessage}");
+                }
+            }
+            catch (Exception logEx)
+            {
+                // ログの書き込み中にエラーが発生した場合の処理
+                Console.WriteLine("ログの書き込み中にエラーが発生しました。");
+                Console.WriteLine($"ログエラー: {logEx.Message}");
+            }
+        }
+
+        private async Task RemoveOldLogs(string filePath, DateTime cutoffDate)
+        {
+            string tempFilePath = Properties.Settings.Default.tmpdir + "\\temp.log";
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                using (StreamWriter writer = new StreamWriter(tempFilePath))
+                {
+                    string line;
+                    bool pastCutoffDate = false;
+
+                    // ログファイルを上から順に非同期で処理し、日付の古い順に並んでいることを利用する
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        // 行が空かどうかをチェックします
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            continue; // 空行の場合はスキップします
+                        }
+
+                        // カットオフ日よりも新しい行を見つけた後の行はすべて書き込みます
+                        if (pastCutoffDate)
+                        {
+                            await writer.WriteLineAsync(line);
+                        }
+                        else
+                        {
+                            // 行の長さが19字未満の場合はスキップします
+                            if (line.Length < 19)
+                            {
+                                continue; // 行が短すぎる場合はスキップします
+                            }
+
+                            // ログの日付部分を抽出してDateTimeに変換します
+                            string[] parts = line.Split('-');
+
+                            // スプリットできた場合は、1つ目の要素を取得します
+                            string datePart = parts.Length > 0 ? parts[0] : null;
+
+                            if (datePart != null)
+                            {
+                                if (!DateTime.TryParseExact(datePart, "yyyy/MM/dd HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime logDate))
+                                {
+                                    continue; // 日付がパースできない場合はスキップします
+                                }
+
+                                // ログの日付が指定されたカットオフ日よりも新しい場合
+                                else if (logDate >= cutoffDate)
+                                {
+                                    pastCutoffDate = true; // カットオフ日よりも新しい行を見つけたのでフラグを立てる
+                                    await writer.WriteLineAsync(line);
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+
+                
+                // 一時ファイルからログファイルに非同期でコピーします
+                await CopyFileAsync(tempFilePath, filePath);
+            }
+            finally
+            {
+                // 一時ファイルを削除します
+                File.Delete(tempFilePath);
+            }
+        }
+
+        private async Task CopyFileAsync(string sourcePath, string destinationPath)
+        {
+            using (FileStream sourceStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
+            using (FileStream destinationStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+            {
+                await sourceStream.CopyToAsync(destinationStream);
+            }
         }
     }
 }
