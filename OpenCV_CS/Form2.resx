@@ -126,6 +126,16 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>442, 17</value>
   </metadata>
+  <data name="tabControl.ToolTip" xml:space="preserve">
+    <value>文字を書き込む左上座標、フォントサイズ、カラーコード(16進RGB)、文字列
+の並びでカンマ区切りで入力してください。
+特殊文字：$d:日付、$t:時刻、$i:患者ID、$n:患者名
+20箇所まで入力できますが、区切り、フォーマットを間違うとエラーになりますので
+注意してください。
+例；
+55,890,12,808080,Yuki ENT clinic,60,200,16,808080,$d $t, 60, 240,18,808080, $i,60,300,18,808080,$n
+</value>
+  </data>
   <data name="presetString1.ToolTip" xml:space="preserve">
     <value>文字を書き込む左上座標、フォントサイズ、カラーコード(16進RGB)、文字列
 の並びでカンマ区切りで入力してください。
@@ -134,6 +144,46 @@
 注意してください。
 例；
 55,890,12,808080,Yuki ENT clinic,60,200,16,808080,$d $t, 60, 240,18,808080, $i,60,300,18,808080,$n</value>
+  </data>
+  <data name="presetString3.ToolTip" xml:space="preserve">
+    <value>文字を書き込む左上座標、フォントサイズ、カラーコード(16進RGB)、文字列
+の並びでカンマ区切りで入力してください。
+特殊文字：$d:日付、$t:時刻、$i:患者ID、$n:患者名
+20箇所まで入力できますが、区切り、フォーマットを間違うとエラーになりますので
+注意してください。
+例；
+55,890,12,808080,Yuki ENT clinic,60,200,16,808080,$d $t, 60, 240,18,808080, $i,60,300,18,808080,$n
+</value>
+  </data>
+  <data name="presetString4.ToolTip" xml:space="preserve">
+    <value>文字を書き込む左上座標、フォントサイズ、カラーコード(16進RGB)、文字列
+の並びでカンマ区切りで入力してください。
+特殊文字：$d:日付、$t:時刻、$i:患者ID、$n:患者名
+20箇所まで入力できますが、区切り、フォーマットを間違うとエラーになりますので
+注意してください。
+例；
+55,890,12,808080,Yuki ENT clinic,60,200,16,808080,$d $t, 60, 240,18,808080, $i,60,300,18,808080,$n
+</value>
+  </data>
+  <data name="presetString5.ToolTip" xml:space="preserve">
+    <value>文字を書き込む左上座標、フォントサイズ、カラーコード(16進RGB)、文字列
+の並びでカンマ区切りで入力してください。
+特殊文字：$d:日付、$t:時刻、$i:患者ID、$n:患者名
+20箇所まで入力できますが、区切り、フォーマットを間違うとエラーになりますので
+注意してください。
+例；
+55,890,12,808080,Yuki ENT clinic,60,200,16,808080,$d $t, 60, 240,18,808080, $i,60,300,18,808080,$n
+</value>
+  </data>
+  <data name="presetString6.ToolTip" xml:space="preserve">
+    <value>文字を書き込む左上座標、フォントサイズ、カラーコード(16進RGB)、文字列
+の並びでカンマ区切りで入力してください。
+特殊文字：$d:日付、$t:時刻、$i:患者ID、$n:患者名
+20箇所まで入力できますが、区切り、フォーマットを間違うとエラーになりますので
+注意してください。
+例；
+55,890,12,808080,Yuki ENT clinic,60,200,16,808080,$d $t, 60, 240,18,808080, $i,60,300,18,808080,$n
+</value>
   </data>
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>302, 17</value>

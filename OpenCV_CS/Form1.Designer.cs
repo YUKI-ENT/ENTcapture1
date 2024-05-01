@@ -48,11 +48,12 @@
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboDevices = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripComboBoxResolution = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripReloadButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripOpenLogFile = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonVersion = new System.Windows.Forms.ToolStripButton();
             this.checkBoxVideo = new System.Windows.Forms.CheckBox();
             this.buttonFFmpeg = new System.Windows.Forms.Button();
@@ -91,6 +92,7 @@
             this.buttonSnap = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.pictureBoxState = new System.Windows.Forms.PictureBox();
@@ -99,7 +101,6 @@
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
-            this.toolStripOpenLogFile = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -136,9 +137,11 @@
             // 
             // buttonExit
             // 
-            this.buttonExit.Location = new System.Drawing.Point(618, 79);
+            this.buttonExit.Image = ((System.Drawing.Image)(resources.GetObject("buttonExit.Image")));
+            this.buttonExit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonExit.Location = new System.Drawing.Point(628, 67);
             this.buttonExit.Name = "buttonExit";
-            this.buttonExit.Size = new System.Drawing.Size(130, 36);
+            this.buttonExit.Size = new System.Drawing.Size(110, 36);
             this.buttonExit.TabIndex = 13;
             this.buttonExit.Text = "終了";
             this.buttonExit.UseVisualStyleBackColor = true;
@@ -148,7 +151,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(17, 70);
+            this.label2.Location = new System.Drawing.Point(10, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(16, 12);
             this.label2.TabIndex = 10;
@@ -199,7 +202,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(109, 70);
+            this.label3.Location = new System.Drawing.Point(108, 70);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 12);
             this.label3.TabIndex = 28;
@@ -208,7 +211,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(260, 70);
+            this.label4.Location = new System.Drawing.Point(250, 70);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 30;
@@ -217,14 +220,15 @@
             // comboBoxTest
             // 
             this.comboBoxTest.FormattingEnabled = true;
-            this.comboBoxTest.Location = new System.Drawing.Point(307, 67);
+            this.comboBoxTest.Location = new System.Drawing.Point(292, 67);
             this.comboBoxTest.Name = "comboBoxTest";
-            this.comboBoxTest.Size = new System.Drawing.Size(105, 20);
+            this.comboBoxTest.Size = new System.Drawing.Size(116, 20);
             this.comboBoxTest.TabIndex = 2;
             // 
             // radioButton1
             // 
             this.radioButton1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(12, 30);
             this.radioButton1.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton1.Name = "radioButton1";
@@ -245,7 +249,6 @@
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(80, 34);
             this.radioButton2.TabIndex = 34;
-            this.radioButton2.TabStop = true;
             this.radioButton2.Text = "プリセット2";
             this.radioButton2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.radioButton2, "プリセットボタン：「設定」で名称やビデオデバイス名を設定します");
@@ -260,7 +263,6 @@
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(80, 34);
             this.radioButton3.TabIndex = 35;
-            this.radioButton3.TabStop = true;
             this.radioButton3.Text = "プリセット3";
             this.radioButton3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.radioButton3, "プリセットボタン：「設定」で名称やビデオデバイス名を設定します");
@@ -275,7 +277,6 @@
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.Size = new System.Drawing.Size(80, 34);
             this.radioButton4.TabIndex = 36;
-            this.radioButton4.TabStop = true;
             this.radioButton4.Text = "プリセット4";
             this.radioButton4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.radioButton4, "プリセットボタン：「設定」で名称やビデオデバイス名を設定します");
@@ -286,13 +287,13 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripComboDevices,
-            this.toolStripSeparator3,
             this.toolStripComboBoxResolution,
+            this.toolStripReloadButton,
             this.toolStripSeparator1,
             this.toolStripButtonSettings,
             this.toolStripSeparator2,
-            this.toolStripButtonVersion,
-            this.toolStripOpenLogFile});
+            this.toolStripOpenLogFile,
+            this.toolStripButtonVersion});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(930, 25);
@@ -310,11 +311,6 @@
             this.toolStripComboDevices.SelectedIndexChanged += new System.EventHandler(this.toolStripComboDevices_SelectedIndexChanged);
             this.toolStripComboDevices.TextChanged += new System.EventHandler(this.toolStripComboDevices_TextChanged);
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
             // toolStripComboBoxResolution
             // 
             this.toolStripComboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -322,6 +318,16 @@
             this.toolStripComboBoxResolution.Size = new System.Drawing.Size(121, 25);
             this.toolStripComboBoxResolution.ToolTipText = "解像度一覧";
             this.toolStripComboBoxResolution.TextChanged += new System.EventHandler(this.toolStripComboBoxResolution_TextChanged);
+            // 
+            // toolStripReloadButton
+            // 
+            this.toolStripReloadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripReloadButton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripReloadButton.Image")));
+            this.toolStripReloadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripReloadButton.Name = "toolStripReloadButton";
+            this.toolStripReloadButton.Size = new System.Drawing.Size(23, 22);
+            this.toolStripReloadButton.Text = "ビデオデバイスを再スキャンします";
+            this.toolStripReloadButton.Click += new System.EventHandler(this.toolStripReloadButton_Click);
             // 
             // toolStripSeparator1
             // 
@@ -342,6 +348,17 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripOpenLogFile
+            // 
+            this.toolStripOpenLogFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripOpenLogFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenLogFile.Image")));
+            this.toolStripOpenLogFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripOpenLogFile.Name = "toolStripOpenLogFile";
+            this.toolStripOpenLogFile.Size = new System.Drawing.Size(23, 22);
+            this.toolStripOpenLogFile.Text = "toolStripButton1";
+            this.toolStripOpenLogFile.ToolTipText = "logファイルを開く";
+            this.toolStripOpenLogFile.Click += new System.EventHandler(this.toolStripOpenLogFile_Click);
             // 
             // toolStripButtonVersion
             // 
@@ -366,7 +383,7 @@
             // 
             // buttonFFmpeg
             // 
-            this.buttonFFmpeg.Location = new System.Drawing.Point(673, 180);
+            this.buttonFFmpeg.Location = new System.Drawing.Point(663, 183);
             this.buttonFFmpeg.Name = "buttonFFmpeg";
             this.buttonFFmpeg.Size = new System.Drawing.Size(75, 28);
             this.buttonFFmpeg.TabIndex = 10;
@@ -376,7 +393,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(522, 183);
+            this.buttonStart.Location = new System.Drawing.Point(515, 183);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(62, 28);
             this.buttonStart.TabIndex = 41;
@@ -386,7 +403,7 @@
             // 
             // buttonEnd
             // 
-            this.buttonEnd.Location = new System.Drawing.Point(584, 183);
+            this.buttonEnd.Location = new System.Drawing.Point(577, 183);
             this.buttonEnd.Name = "buttonEnd";
             this.buttonEnd.Size = new System.Drawing.Size(62, 28);
             this.buttonEnd.TabIndex = 42;
@@ -645,7 +662,6 @@
             this.radioButton5.Name = "radioButton5";
             this.radioButton5.Size = new System.Drawing.Size(80, 34);
             this.radioButton5.TabIndex = 47;
-            this.radioButton5.TabStop = true;
             this.radioButton5.Text = "プリセット5";
             this.radioButton5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.radioButton5, "プリセットボタン：「設定」で名称やビデオデバイス名を設定します");
@@ -728,9 +744,9 @@
             // 
             this.buttonSnap.Image = ((System.Drawing.Image)(resources.GetObject("buttonSnap.Image")));
             this.buttonSnap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonSnap.Location = new System.Drawing.Point(482, 79);
+            this.buttonSnap.Location = new System.Drawing.Point(515, 67);
             this.buttonSnap.Name = "buttonSnap";
-            this.buttonSnap.Size = new System.Drawing.Size(130, 36);
+            this.buttonSnap.Size = new System.Drawing.Size(110, 36);
             this.buttonSnap.TabIndex = 6;
             this.buttonSnap.Text = "静止画";
             this.toolTip1.SetToolTip(this.buttonSnap, "ビデオキャプチャ、動画再生時、静止画をSnapします");
@@ -741,9 +757,9 @@
             // 
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(482, 30);
+            this.button2.Location = new System.Drawing.Point(515, 30);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(130, 36);
+            this.button2.Size = new System.Drawing.Size(110, 36);
             this.button2.TabIndex = 3;
             this.button2.Text = "開始";
             this.toolTip1.SetToolTip(this.button2, "キャプチャを開始します");
@@ -754,14 +770,28 @@
             // 
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(618, 30);
+            this.button1.Location = new System.Drawing.Point(628, 30);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(130, 36);
+            this.button1.Size = new System.Drawing.Size(110, 36);
             this.button1.TabIndex = 7;
             this.button1.Text = "動画再生";
             this.toolTip1.SetToolTip(this.button1, "録画したファイルを開きます");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // radioButton6
+            // 
+            this.radioButton6.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton6.Location = new System.Drawing.Point(412, 30);
+            this.radioButton6.Margin = new System.Windows.Forms.Padding(0);
+            this.radioButton6.Name = "radioButton6";
+            this.radioButton6.Size = new System.Drawing.Size(80, 34);
+            this.radioButton6.TabIndex = 51;
+            this.radioButton6.Text = "プリセット6";
+            this.radioButton6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.radioButton6, "プリセットボタン：「設定」で名称やビデオデバイス名を設定します");
+            this.radioButton6.UseVisualStyleBackColor = true;
+            this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton6_CheckedChanged);
             // 
             // button4
             // 
@@ -785,7 +815,7 @@
             // 
             // pictureBoxState
             // 
-            this.pictureBoxState.Location = new System.Drawing.Point(431, 79);
+            this.pictureBoxState.Location = new System.Drawing.Point(452, 67);
             this.pictureBoxState.Name = "pictureBoxState";
             this.pictureBoxState.Size = new System.Drawing.Size(36, 36);
             this.pictureBoxState.TabIndex = 19;
@@ -819,10 +849,10 @@
             // 
             this.comboBoxID.FormattingEnabled = true;
             this.comboBoxID.IntegralHeight = false;
-            this.comboBoxID.Location = new System.Drawing.Point(39, 67);
+            this.comboBoxID.Location = new System.Drawing.Point(28, 67);
             this.comboBoxID.MaxDropDownItems = 12;
             this.comboBoxID.Name = "comboBoxID";
-            this.comboBoxID.Size = new System.Drawing.Size(64, 20);
+            this.comboBoxID.Size = new System.Drawing.Size(74, 20);
             this.comboBoxID.TabIndex = 48;
             this.comboBoxID.SelectedIndexChanged += new System.EventHandler(this.comboBoxID_SelectedIndexChanged);
             this.comboBoxID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxID_KeyPress);
@@ -850,22 +880,12 @@
             this.labelFrames.TabIndex = 50;
             this.labelFrames.Text = "0/0";
             // 
-            // toolStripOpenLogFile
-            // 
-            this.toolStripOpenLogFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripOpenLogFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenLogFile.Image")));
-            this.toolStripOpenLogFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripOpenLogFile.Name = "toolStripOpenLogFile";
-            this.toolStripOpenLogFile.Size = new System.Drawing.Size(23, 22);
-            this.toolStripOpenLogFile.Text = "toolStripButton1";
-            this.toolStripOpenLogFile.ToolTipText = "logファイルを開く";
-            this.toolStripOpenLogFile.Click += new System.EventHandler(this.toolStripOpenLogFile_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(930, 779);
+            this.Controls.Add(this.radioButton6);
             this.Controls.Add(this.labelFrames);
             this.Controls.Add(this.comboBoxName);
             this.Controls.Add(this.comboBoxID);
@@ -1003,13 +1023,14 @@
         private System.Windows.Forms.Button buttonFilterDelete;
         private System.Windows.Forms.ListBox listBoxFilters;
         private System.Windows.Forms.Button buttonFilterAdd;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.CheckBox checkBoxNorec;
         private System.Windows.Forms.RadioButton radioButton5;
         public System.Windows.Forms.ComboBox comboBoxName;
         public System.Windows.Forms.ComboBox comboBoxID;
         private System.Windows.Forms.Label labelFrames;
         private System.Windows.Forms.ToolStripButton toolStripOpenLogFile;
+        private System.Windows.Forms.ToolStripButton toolStripReloadButton;
+        private System.Windows.Forms.RadioButton radioButton6;
     }
 }
 

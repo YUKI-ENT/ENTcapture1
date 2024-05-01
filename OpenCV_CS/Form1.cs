@@ -618,7 +618,7 @@ namespace ENTcapture
                     int fc;
 
                     if (s == "raw") fc = 0;
-                    else if (s[0] == 'M')
+                    else if (s[0] == 'M' || s[0] == 'H')
                     {
                         ex = ".mp4";
                         FourCC fourcc = VideoWriter.FourCC(s[0], s[1], s[2], s[3]);
@@ -897,6 +897,7 @@ namespace ENTcapture
                 radioButton3.Text = Properties.Settings.Default.name3;
                 radioButton4.Text = Properties.Settings.Default.name4;
                 radioButton5.Text = Properties.Settings.Default.name5;
+                radioButton6.Text = Properties.Settings.Default.name6;
 
                 //comboDevices.SelectedIndex = comboDevices.Items.IndexOf(Properties.Settings.Default.device1);
                 //            comboBoxResolution.SelectedIndex = comboBoxResolution.Items.IndexOf(Properties.Settings.Default.reso1);
@@ -1054,296 +1055,118 @@ namespace ENTcapture
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            try
+            if (radioButton1.Checked)
             {
-                if (radioButton1.Checked == true)
-                {
-                    initDrawingParameters();
-
-                    if (Properties.Settings.Default.device1.Length > 0 && toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device1) >= 0)
-                    {
-                        toolStripComboDevices.SelectedIndex = toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device1);
-                        toolStripComboBoxResolution.SelectedIndex = Properties.Settings.Default.reso1;
-                    }
-                    else
-                    {
-                        MessageBox.Show("プリセットで指定されたデバイスが見つかりません");
-                        return;
-                    }
-
-                    checkBoxVideo.Checked = Properties.Settings.Default.video1;
-
-
-
-                    comboBoxTest.SelectedIndex = comboBoxTest.Items.IndexOf(Properties.Settings.Default.test1);
-                    string[] r1 = Properties.Settings.Default.roi1.Split(',');
-                    if (r1.Length >= 4)
-                    {
-                        int i = 0;
-                        foreach (string s in Properties.Settings.Default.roi1.Split(','))
-                        {
-                            rois[i] = int.Parse(s);
-                            i++;
-                        }
-                    }
-                    string[] s1 = Properties.Settings.Default.string1.Split(',');
-                    if (s1.Length >= 5)
-                    {
-                        for (int i = 0; i < s1.Length / 5; i++)
-                        {
-                            ol_p[i, 0] = int.Parse(s1[i * 5]); //x
-                            ol_p[i, 1] = int.Parse(s1[i * 5 + 1]); //y
-                            ol_p[i, 2] = int.Parse(s1[i * 5 + 2]); // font size
-                            ol_str[i, 0] = s1[i * 5 + 3]; // font color
-                            ol_str[i, 1] = s1[i * 5 + 4];
-                        }
-                    }
-                    ol_font = Properties.Settings.Default.font1;
-
-                    //FPS
-                    presetFPS = Properties.Settings.Default.FPS1;
-
-                }
-            }
-
-            catch (Exception)
-            {
-                string mes = "設定で解像度が正しく設定されていません。デバイスの最大解像度に設定しました。";
-                MessageBox.Show(mes);
+                setPreset(Properties.Settings.Default.device1, Properties.Settings.Default.reso1, Properties.Settings.Default.video1,
+                    Properties.Settings.Default.test1, Properties.Settings.Default.roi1, Properties.Settings.Default.string1,
+                    Properties.Settings.Default.font1, Properties.Settings.Default.FPS1);
             }
 
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            try
+            if (radioButton2.Checked)
             {
-                if (radioButton2.Checked == true)
-                {
-                    initDrawingParameters();
-
-                    if (Properties.Settings.Default.device2.Length > 0 && toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device2) >= 0)
-                    {
-                        toolStripComboDevices.SelectedIndex = toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device2);
-                        toolStripComboBoxResolution.SelectedIndex = Properties.Settings.Default.reso2;
-                    }
-                    else
-                    {
-                        MessageBox.Show("プリセットで指定されたデバイスが見つかりません");
-                        return;
-                    }
-
-                    checkBoxVideo.Checked = Properties.Settings.Default.video2;
-
-
-
-                    comboBoxTest.SelectedIndex = comboBoxTest.Items.IndexOf(Properties.Settings.Default.test2);
-                    string[] r1 = Properties.Settings.Default.roi2.Split(',');
-                    if (r1.Length >= 4)
-                    {
-                        int i = 0;
-                        foreach (string s in Properties.Settings.Default.roi2.Split(','))
-                        {
-                            rois[i] = int.Parse(s);
-                            i++;
-                        }
-                    }
-                    string[] s1 = Properties.Settings.Default.string2.Split(',');
-                    if (s1.Length >= 5)
-                    {
-                        for (int i = 0; i < s1.Length / 5; i++)
-                        {
-                            ol_p[i, 0] = int.Parse(s1[i * 5]); //x
-                            ol_p[i, 1] = int.Parse(s1[i * 5 + 1]); //y
-                            ol_p[i, 2] = int.Parse(s1[i * 5 + 2]); // font size
-                            ol_str[i, 0] = s1[i * 5 + 3]; // font color
-                            ol_str[i, 1] = s1[i * 5 + 4];
-                        }
-                    }
-                    ol_font = Properties.Settings.Default.font2;
-
-                    //FPS
-                    presetFPS = Properties.Settings.Default.FPS2;
-                }
-            }
-
-            catch (Exception)
-            {
-                string mes = "設定で解像度が正しく設定されていません。デバイスの最大解像度に設定しました。";
-                MessageBox.Show(mes);
+                setPreset(Properties.Settings.Default.device2, Properties.Settings.Default.reso2, Properties.Settings.Default.video2,
+                    Properties.Settings.Default.test2, Properties.Settings.Default.roi2, Properties.Settings.Default.string2,
+                    Properties.Settings.Default.font2, Properties.Settings.Default.FPS2);
             }
 
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
-            try
+            if (radioButton3.Checked)
             {
-                if (radioButton3.Checked == true)
-                {
-                    initDrawingParameters();
-
-                    if (Properties.Settings.Default.device3.Length > 0 && toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device3) >= 0)
-                    {
-                        toolStripComboDevices.SelectedIndex = toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device3);
-                        toolStripComboBoxResolution.SelectedIndex = Properties.Settings.Default.reso3;
-                    }
-                    else
-                    {
-                        MessageBox.Show("プリセットで指定されたデバイスが見つかりません");
-                        return;
-                    }
-
-                    checkBoxVideo.Checked = Properties.Settings.Default.video3;
-
-                    comboBoxTest.SelectedIndex = comboBoxTest.Items.IndexOf(Properties.Settings.Default.test3);
-                    string[] r1 = Properties.Settings.Default.roi3.Split(',');
-                    if (r1.Length >= 4)
-                    {
-                        int i = 0;
-                        foreach (string s in Properties.Settings.Default.roi3.Split(','))
-                        {
-                            rois[i] = int.Parse(s);
-                            i++;
-                        }
-                    }
-                    string[] s1 = Properties.Settings.Default.string3.Split(',');
-                    if (s1.Length >= 5)
-                    {
-                        for (int i = 0; i < s1.Length / 5; i++)
-                        {
-                            ol_p[i, 0] = int.Parse(s1[i * 5]); //x
-                            ol_p[i, 1] = int.Parse(s1[i * 5 + 1]); //y
-                            ol_p[i, 2] = int.Parse(s1[i * 5 + 2]); // font size
-                            ol_str[i, 0] = s1[i * 5 + 3]; // font color
-                            ol_str[i, 1] = s1[i * 5 + 4];
-                        }
-                    }
-                    ol_font = Properties.Settings.Default.font3;
-
-                    //FPS
-                    presetFPS = Properties.Settings.Default.FPS3;
-                }
-            }
-
-            catch (Exception)
-            {
-                string mes = "設定で解像度が正しく設定されていません。デバイスの最大解像度に設定しました。";
-                MessageBox.Show(mes);
+                setPreset(Properties.Settings.Default.device3, Properties.Settings.Default.reso3, Properties.Settings.Default.video3,
+                    Properties.Settings.Default.test3, Properties.Settings.Default.roi3, Properties.Settings.Default.string3,
+                    Properties.Settings.Default.font3, Properties.Settings.Default.FPS3);
             }
 
         }
 
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
-            try
+            if (radioButton4.Checked)
             {
-                if (radioButton4.Checked == true)
-                {
-                    initDrawingParameters();
-
-                    if (Properties.Settings.Default.device4.Length > 0 && toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device4) >= 0)
-                    {
-                        toolStripComboDevices.SelectedIndex = toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device4);
-                        toolStripComboBoxResolution.SelectedIndex = Properties.Settings.Default.reso4;
-                    }
-                    else
-                    {
-                        MessageBox.Show("プリセットで指定されたデバイスが見つかりません");
-                        return;
-                    }
-
-                    checkBoxVideo.Checked = Properties.Settings.Default.video4;
-
-
-                    comboBoxTest.SelectedIndex = comboBoxTest.Items.IndexOf(Properties.Settings.Default.test4);
-                    string[] r1 = Properties.Settings.Default.roi4.Split(',');
-                    if (r1.Length >= 4)
-                    {
-                        int i = 0;
-                        foreach (string s in Properties.Settings.Default.roi4.Split(','))
-                        {
-                            rois[i] = int.Parse(s);
-                            i++;
-                        }
-                    }
-                    string[] s1 = Properties.Settings.Default.string4.Split(',');
-                    if (s1.Length >= 5)
-                    {
-                        for (int i = 0; i < s1.Length / 5; i++)
-                        {
-                            ol_p[i, 0] = int.Parse(s1[i * 5]); //x
-                            ol_p[i, 1] = int.Parse(s1[i * 5 + 1]); //y
-                            ol_p[i, 2] = int.Parse(s1[i * 5 + 2]); // font size
-                            ol_str[i, 0] = s1[i * 5 + 3]; // font color
-                            ol_str[i, 1] = s1[i * 5 + 4];
-                        }
-                    }
-                    ol_font = Properties.Settings.Default.font4;
-
-                    //FPS
-                    presetFPS = Properties.Settings.Default.FPS4;
-                }
-            }
-
-            catch (Exception)
-            {
-                string mes = "設定で解像度が正しく設定されていません。デバイスの最大解像度に設定しました。";
-                MessageBox.Show(mes);
+                setPreset(Properties.Settings.Default.device4, Properties.Settings.Default.reso4, Properties.Settings.Default.video4,
+                    Properties.Settings.Default.test4, Properties.Settings.Default.roi4, Properties.Settings.Default.string4,
+                    Properties.Settings.Default.font4, Properties.Settings.Default.FPS4);
             }
 
         }
 
         private void radioButton5_CheckedChanged(object sender, EventArgs e)
         {
+            if (radioButton5.Checked)
+            {
+                setPreset(Properties.Settings.Default.device5, Properties.Settings.Default.reso5, Properties.Settings.Default.video5,
+                    Properties.Settings.Default.test5, Properties.Settings.Default.roi5, Properties.Settings.Default.string5,
+                    Properties.Settings.Default.font5, Properties.Settings.Default.FPS5);
+            }
+
+        }
+
+        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton6.Checked)
+            {
+                setPreset(Properties.Settings.Default.device6, Properties.Settings.Default.reso6, Properties.Settings.Default.video6,
+                    Properties.Settings.Default.test6, Properties.Settings.Default.roi6, Properties.Settings.Default.string6,
+                    Properties.Settings.Default.font6, Properties.Settings.Default.FPS6);
+            }
+        }
+
+
+        private void setPreset(string presetDevice, int presetReso, bool presetVideo, string presetTest, string presetRoi, string presetString, string presetFont, int FPS)
+        {
             try
             {
-                if (radioButton5.Checked == true)
+                initDrawingParameters();
+
+                if (presetDevice.Length > 0 && toolStripComboDevices.Items.IndexOf(presetDevice) >= 0)
                 {
-                    initDrawingParameters();
-
-                    if (Properties.Settings.Default.device5.Length > 0 && toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device5) >= 0)
-                    {
-                        toolStripComboDevices.SelectedIndex = toolStripComboDevices.Items.IndexOf(Properties.Settings.Default.device5);
-                        toolStripComboBoxResolution.SelectedIndex = Properties.Settings.Default.reso5;
-                    }
-                    else
-                    {
-                        MessageBox.Show("プリセットで指定されたデバイスが見つかりません");
-                        return;
-                    }
-
-                    checkBoxVideo.Checked = Properties.Settings.Default.video5;
-
-
-                    comboBoxTest.SelectedIndex = comboBoxTest.Items.IndexOf(Properties.Settings.Default.test5);
-                    string[] r1 = Properties.Settings.Default.roi5.Split(',');
-                    if (r1.Length >= 4)
-                    {
-                        int i = 0;
-                        foreach (string s in Properties.Settings.Default.roi5.Split(','))
-                        {
-                            rois[i] = int.Parse(s);
-                            i++;
-                        }
-                    }
-                    string[] s1 = Properties.Settings.Default.string5.Split(',');
-                    if (s1.Length >= 5)
-                    {
-                        for (int i = 0; i < s1.Length / 5; i++)
-                        {
-                            ol_p[i, 0] = int.Parse(s1[i * 5]); //x
-                            ol_p[i, 1] = int.Parse(s1[i * 5 + 1]); //y
-                            ol_p[i, 2] = int.Parse(s1[i * 5 + 2]); // font size
-                            ol_str[i, 0] = s1[i * 5 + 3]; // font color
-                            ol_str[i, 1] = s1[i * 5 + 4];
-                        }
-                    }
-                    ol_font = Properties.Settings.Default.font5;
-
-                    //FPS
-                    presetFPS = Properties.Settings.Default.FPS5;
+                    toolStripComboDevices.SelectedIndex = toolStripComboDevices.Items.IndexOf(presetDevice);
+                    toolStripComboBoxResolution.SelectedIndex = presetReso;
                 }
+                else
+                {
+                    MessageBox.Show("プリセットで指定されたデバイス" + presetDevice + "が見つかりません");
+                    return;
+                }
+
+                checkBoxVideo.Checked = presetVideo;
+
+                comboBoxTest.SelectedIndex = comboBoxTest.Items.IndexOf(presetTest);
+                string[] r1 = presetRoi.Split(',');
+                if (r1.Length >= 4)
+                {
+                    int i = 0;
+                    foreach (string s in presetRoi.Split(','))
+                    {
+                        rois[i] = int.Parse(s);
+                        i++;
+                    }
+                }
+                string[] s1 = presetString.Split(',');
+                if (s1.Length >= 5)
+                {
+                    for (int i = 0; i < s1.Length / 5; i++)
+                    {
+                        ol_p[i, 0] = int.Parse(s1[i * 5]); //x
+                        ol_p[i, 1] = int.Parse(s1[i * 5 + 1]); //y
+                        ol_p[i, 2] = int.Parse(s1[i * 5 + 2]); // font size
+                        ol_str[i, 0] = s1[i * 5 + 3]; // font color
+                        ol_str[i, 1] = s1[i * 5 + 4];
+                    }
+                }
+                ol_font = presetFont;
+
+                //FPS
+                presetFPS = FPS;
+
+                LogEvents("プリセットデバイス:" + presetDevice + "の設定をロードしました");
             }
 
             catch (Exception)
@@ -1705,7 +1528,7 @@ namespace ENTcapture
 
                     try
                     {
-                        SaveImage(saveimg, snapFile, jpeg_quality);
+                        await Task.Run(() => SaveImage(saveimg, snapFile, jpeg_quality));
                     }
                     catch (Exception ex)
                     {
@@ -2300,7 +2123,7 @@ namespace ENTcapture
                         conn.Close();
                         LogError(ex);
 
-                        MessageBox.Show("PostgreSQLサーバーへの接続に失敗しました。PostgreSQLのサーバーアドレスを確認してください。\n" + ex.ToString());
+                        MessageBox.Show("PostgreSQLサーバーへの接続に失敗しました。PostgreSQLのサーバーアドレスを確認してください。\n");
                     }
                 }
             }
@@ -2372,6 +2195,8 @@ namespace ENTcapture
                     radioButton3.Enabled = false;
                     radioButton4.Enabled = false;
                     radioButton5.Enabled = false;
+                    radioButton6.Enabled = false;
+
                     toolStripComboDevices.Enabled = false;
                     toolStripComboBoxResolution.Enabled = false;
                     checkBoxVideo.Enabled = false;
@@ -2393,7 +2218,9 @@ namespace ENTcapture
                     radioButton2.Enabled = true;
                     radioButton3.Enabled = true;
                     radioButton4.Enabled = true;
-                    radioButton4.Enabled = true;
+                    radioButton5.Enabled = true;
+                    radioButton6.Enabled = true;
+
                     toolStripComboDevices.Enabled = true;
                     buttonSnap.Enabled = true;
                     toolStripComboBoxResolution.Enabled = true;
@@ -2416,6 +2243,8 @@ namespace ENTcapture
                     radioButton3.Enabled = true;
                     radioButton4.Enabled = true;
                     radioButton5.Enabled = true;
+                    radioButton6.Enabled = true;
+
                     toolStripComboDevices.Enabled = true;
                     buttonSnap.Enabled = false;
                     toolStripComboBoxResolution.Enabled = true;
@@ -2433,8 +2262,6 @@ namespace ENTcapture
                     buttonEnd.Enabled = false;
                     break;
             }
-
-
         }
 
         private void toolStripOpenLogFile_Click(object sender, EventArgs e)
@@ -2497,6 +2324,15 @@ namespace ENTcapture
             FolderItem folderItem = objFolder.ParseName(Path.GetFileName(strFileName));
             string strDuration = objFolder.GetDetailsOf(folderItem, 27);
             return strDuration;
+        }
+
+        private void toolStripReloadButton_Click(object sender, EventArgs e)
+        {
+            this.initForm();
+
+            loadFilter();
+
+            LogEvents("デバイスを再スキャンしました");
         }
 
         private async Task EncodeMovie(string inputFile, string outDir, int sizeMB, string codec)

@@ -49,7 +49,7 @@ namespace ENTcapture
                 this.textBox1.Text = Properties.Settings.Default.outdir;
                 this.textBox2.Text = Properties.Settings.Default.tmpdir;
                 this.comboCodecs.Items.Clear();
-                this.comboCodecs.Items.AddRange(new object[] { "raw", "XVID", "DIVX", "MP4V", "MP4S" });
+                this.comboCodecs.Items.AddRange(new object[] { "raw", "MJPG", "XVID", "DIVX", "MP4V", "H264" });
                 int index = comboCodecs.Items.IndexOf(Properties.Settings.Default.codec);
                 comboCodecs.SelectedIndex = index;
 
@@ -91,6 +91,7 @@ namespace ENTcapture
                 presetDevice3.Items.Clear();
                 presetDevice4.Items.Clear();
                 presetDevice5.Items.Clear();
+                presetDevice6.Items.Clear();
 
                 foreach (FilterInfo device in ((Form1)this.Owner).videoDevices)
                 {
@@ -100,12 +101,14 @@ namespace ENTcapture
                     presetDevice3.Items.Add(device.Name);
                     presetDevice4.Items.Add(device.Name);
                     presetDevice5.Items.Add(device.Name);
+                    presetDevice6.Items.Add(device.Name);
                 }
                 this.presetDevice1.Text = Properties.Settings.Default.device1;
                 this.presetDevice2.Text = Properties.Settings.Default.device2;
                 this.presetDevice3.Text = Properties.Settings.Default.device3;
                 this.presetDevice4.Text = Properties.Settings.Default.device4;
                 this.presetDevice5.Text = Properties.Settings.Default.device5;
+                this.presetDevice6.Text = Properties.Settings.Default.device6;
 
                 this.presetRoi1.Text = Properties.Settings.Default.roi1;
                 this.presetString1.Text = Properties.Settings.Default.string1;
@@ -117,12 +120,15 @@ namespace ENTcapture
                 this.presetString4.Text = Properties.Settings.Default.string4;
                 this.presetRoi5.Text = Properties.Settings.Default.roi5;
                 this.presetString5.Text = Properties.Settings.Default.string5;
+                this.presetRoi6.Text = Properties.Settings.Default.roi6;
+                this.presetString6.Text = Properties.Settings.Default.string6;
 
                 this.presetVideo1.Checked = Properties.Settings.Default.video1;
                 this.presetVideo2.Checked = Properties.Settings.Default.video2;
                 this.presetVideo3.Checked = Properties.Settings.Default.video3;
                 this.presetVideo4.Checked = Properties.Settings.Default.video4;
                 this.presetVideo5.Checked = Properties.Settings.Default.video5;
+                this.presetVideo6.Checked = Properties.Settings.Default.video6;
 
                 //Fonts
                 //InstalledFontCollectionオブジェクトの取得
@@ -134,6 +140,7 @@ namespace ENTcapture
                 presetFonts3.Items.Clear();
                 presetFonts4.Items.Clear();
                 presetFonts5.Items.Clear();
+                presetFonts6.Items.Clear();
                 foreach (FontFamily f in ffs)
                 {
                     presetFonts1.Items.Add(f.Name);
@@ -141,12 +148,15 @@ namespace ENTcapture
                     presetFonts3.Items.Add(f.Name);
                     presetFonts4.Items.Add(f.Name);
                     presetFonts5.Items.Add(f.Name);
+                    presetFonts6.Items.Add(f.Name);
                 }
                 presetFonts1.SelectedIndex = presetFonts1.Items.IndexOf(Properties.Settings.Default.font1);
                 presetFonts2.SelectedIndex = presetFonts2.Items.IndexOf(Properties.Settings.Default.font2);
                 presetFonts3.SelectedIndex = presetFonts3.Items.IndexOf(Properties.Settings.Default.font3);
                 presetFonts4.SelectedIndex = presetFonts4.Items.IndexOf(Properties.Settings.Default.font4);
                 presetFonts5.SelectedIndex = presetFonts5.Items.IndexOf(Properties.Settings.Default.font5);
+                presetFonts6.SelectedIndex = presetFonts5.Items.IndexOf(Properties.Settings.Default.font6);
+
 
                 //RSBASE
                 checkBoxAutoFiling.Checked = Properties.Settings.Default.autofiling;
@@ -171,6 +181,7 @@ namespace ENTcapture
                 textBoxFPS3.Text = Properties.Settings.Default.FPS3.ToString();
                 textBoxFPS4.Text = Properties.Settings.Default.FPS4.ToString();
                 textBoxFPS5.Text = Properties.Settings.Default.FPS5.ToString();
+                textBoxFPS6.Text = Properties.Settings.Default.FPS6.ToString();
 
                 textBoxEncode.Text = Properties.Settings.Default.encodesize.ToString();
 
@@ -216,6 +227,10 @@ namespace ENTcapture
                 this.presetTest5.Items.Clear();
                 this.presetTest5.Items.AddRange(tests);
                 this.presetTest5.Text = Properties.Settings.Default.test5;
+                this.presetName6.Text = Properties.Settings.Default.name6;
+                this.presetTest6.Items.Clear();
+                this.presetTest6.Items.AddRange(tests);
+                this.presetTest6.Text = Properties.Settings.Default.test6;
 
             }
             catch (Exception ex)
@@ -250,6 +265,8 @@ namespace ENTcapture
                 if (presetString3.Text != "" && presetString3.Text.Split(',').Length % 5 != 0) stringError += "preset3 ";
                 if (presetString4.Text != "" && presetString4.Text.Split(',').Length % 5 != 0) stringError += "preset4 ";
                 if (presetString5.Text != "" && presetString5.Text.Split(',').Length % 5 != 0) stringError += "preset5";
+                if (presetString6.Text != "" && presetString6.Text.Split(',').Length % 5 != 0) stringError += "preset6";
+
 
                 if (stringError.Length > 0)
                 {
@@ -290,6 +307,12 @@ namespace ENTcapture
                     Properties.Settings.Default.font5 = presetFonts5.Text;
                     Properties.Settings.Default.string5 = presetString5.Text;
 
+                    Properties.Settings.Default.name6 = presetName6.Text;
+                    Properties.Settings.Default.test6 = presetTest6.Text;
+                    Properties.Settings.Default.roi6 = presetRoi6.Text;
+                    Properties.Settings.Default.font6 = presetFonts6.Text;
+                    Properties.Settings.Default.string6 = presetString6.Text;
+
                     if (PresetReady[1])
                     {
                         Properties.Settings.Default.device1 = presetDevice1.Text;
@@ -315,18 +338,25 @@ namespace ENTcapture
                         Properties.Settings.Default.device5 = presetDevice5.Text;
                         Properties.Settings.Default.reso5 = presetReso5.SelectedIndex;
                     }
+                    if (PresetReady[6])
+                    {
+                        Properties.Settings.Default.device6 = presetDevice6.Text;
+                        Properties.Settings.Default.reso6 = presetReso6.SelectedIndex;
+                    }
 
                     if (Properties.Settings.Default.reso1 < 0) Properties.Settings.Default.reso1 = 0;
                     if (Properties.Settings.Default.reso2 < 0) Properties.Settings.Default.reso2 = 0;
                     if (Properties.Settings.Default.reso3 < 0) Properties.Settings.Default.reso3 = 0;
                     if (Properties.Settings.Default.reso4 < 0) Properties.Settings.Default.reso4 = 0;
                     if (Properties.Settings.Default.reso5 < 0) Properties.Settings.Default.reso5 = 0;
+                    if (Properties.Settings.Default.reso6 < 0) Properties.Settings.Default.reso6 = 0;
 
                     Properties.Settings.Default.video1 = this.presetVideo1.Checked;
                     Properties.Settings.Default.video2 = this.presetVideo2.Checked;
                     Properties.Settings.Default.video3 = this.presetVideo3.Checked;
                     Properties.Settings.Default.video4 = this.presetVideo4.Checked;
                     Properties.Settings.Default.video5 = this.presetVideo5.Checked;
+                    Properties.Settings.Default.video6 = this.presetVideo6.Checked;
 
                     Properties.Settings.Default.jpegquality = int.Parse(textBoxJpegQuality.Text);
 
@@ -339,6 +369,8 @@ namespace ENTcapture
                     Properties.Settings.Default.FPS3 = int.Parse(textBoxFPS3.Text);
                     Properties.Settings.Default.FPS4 = int.Parse(textBoxFPS4.Text);
                     Properties.Settings.Default.FPS5 = int.Parse(textBoxFPS5.Text);
+                    Properties.Settings.Default.FPS6 = int.Parse(textBoxFPS6.Text);
+
 
                     Properties.Settings.Default.encodesize = int.Parse(textBoxEncode.Text);
                     Properties.Settings.Default.recodec = comboBoxReCodec.Text;
@@ -576,6 +608,24 @@ namespace ENTcapture
 
         }
 
+        private void presetButton6_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = "参照画像を選択";
+            openFileDialog1.FileName = "default.html";
+            openFileDialog1.InitialDirectory = Properties.Settings.Default.outdir;
+            openFileDialog1.Filter = "jpegファイル(*.jpg;*.jpeg)|*.jpg;*.jpeg|すべてのファイル(*.*)|*.*";
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.CheckPathExists = true;
+
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                this.presetpictureBox6.ImageLocation = openFileDialog1.FileName;
+            }
+
+        }
+
         private void presetpictureBox2_MouseDown(object sender, MouseEventArgs e)
         {
             if (presetpictureBox2.Image != null)
@@ -613,6 +663,14 @@ namespace ENTcapture
             }
         }
 
+        private void presetpictureBox6_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (presetpictureBox6.Image != null)
+            {
+                var p = ConvertCoordinates(e.Location, presetpictureBox6);
+                this.presetArea6.Text = string.Format("{0},{1}", p.X, p.Y);
+            }
+        }
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
@@ -921,6 +979,38 @@ namespace ENTcapture
                 textBoxPGaddress.Focus();
             }
 
+        }
+
+        private void presetDevice6_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                presetReso6.Items.Clear();
+                PresetReady[6] = false;
+
+                int i = 0;
+                do
+                {
+                    string r = ((Form1)this.Owner).resos[presetDevice6.SelectedIndex, i];
+                    if (r == null) break;
+                    presetReso6.Items.Add(r);
+                    i++;
+                } while (i < 127);
+
+                if (i > 0)
+                {
+                    presetReso6.SelectedIndex = Properties.Settings.Default.reso6;
+                    PresetReady[6] = true;
+                }
+                else
+                {
+                    MessageBox.Show("設定時に存在したデバイスが取り外されているようです。Preset6の設定はスキップされます。");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString() + "Preset6 デバイスエラー。設定時に存在したデバイスが取り外されている可能性があります");
+            }
         }
 
         private void textBoxChar2_KeyDown(object sender, KeyEventArgs e)

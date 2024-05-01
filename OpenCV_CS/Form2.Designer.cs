@@ -168,6 +168,31 @@
             this.label70 = new System.Windows.Forms.Label();
             this.label71 = new System.Windows.Forms.Label();
             this.label72 = new System.Windows.Forms.Label();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.label77 = new System.Windows.Forms.Label();
+            this.textBoxFPS6 = new System.Windows.Forms.TextBox();
+            this.label78 = new System.Windows.Forms.Label();
+            this.label79 = new System.Windows.Forms.Label();
+            this.label80 = new System.Windows.Forms.Label();
+            this.presetVideo6 = new System.Windows.Forms.CheckBox();
+            this.presetFonts6 = new System.Windows.Forms.ComboBox();
+            this.presetName6 = new System.Windows.Forms.TextBox();
+            this.label81 = new System.Windows.Forms.Label();
+            this.presetTest6 = new System.Windows.Forms.ComboBox();
+            this.presetReso6 = new System.Windows.Forms.ComboBox();
+            this.presetDevice6 = new System.Windows.Forms.ComboBox();
+            this.label82 = new System.Windows.Forms.Label();
+            this.presetArea6 = new System.Windows.Forms.TextBox();
+            this.presetButton6 = new System.Windows.Forms.Button();
+            this.presetpictureBox6 = new System.Windows.Forms.PictureBox();
+            this.presetString6 = new System.Windows.Forms.TextBox();
+            this.label83 = new System.Windows.Forms.Label();
+            this.label84 = new System.Windows.Forms.Label();
+            this.presetRoi6 = new System.Windows.Forms.TextBox();
+            this.label85 = new System.Windows.Forms.Label();
+            this.label86 = new System.Windows.Forms.Label();
+            this.label87 = new System.Windows.Forms.Label();
+            this.label88 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.label14 = new System.Windows.Forms.Label();
             this.checkBoxCtrl = new System.Windows.Forms.CheckBox();
@@ -218,6 +243,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.presetpictureBox4)).BeginInit();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.presetpictureBox5)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.presetpictureBox6)).BeginInit();
             this.groupBoxRSB.SuspendLayout();
             this.groupBoxTemp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimeout)).BeginInit();
@@ -298,12 +325,13 @@
             // 
             // comboCodecs
             // 
+            this.comboCodecs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboCodecs.FormattingEnabled = true;
             this.comboCodecs.Location = new System.Drawing.Point(177, 66);
             this.comboCodecs.Name = "comboCodecs";
             this.comboCodecs.Size = new System.Drawing.Size(96, 20);
             this.comboCodecs.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.comboCodecs, "rawは無圧縮のため、ファイルサイズがとても大きくなります");
+            this.toolTip1.SetToolTip(this.comboCodecs, "下のオプションほど高圧縮ですがコマ落ちが起こりやすくなります。rawは無圧縮のため、ファイルサイズがとても大きくなります");
             this.comboCodecs.TextChanged += new System.EventHandler(this.comboCodecs_TextChanged);
             // 
             // label5
@@ -330,11 +358,13 @@
             this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Controls.Add(this.tabPage4);
             this.tabControl.Controls.Add(this.tabPage5);
+            this.tabControl.Controls.Add(this.tabPage6);
             this.tabControl.Location = new System.Drawing.Point(25, 385);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(617, 339);
             this.tabControl.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.tabControl, resources.GetString("tabControl.ToolTip"));
             // 
             // tabPage1
             // 
@@ -1006,6 +1036,7 @@
             this.presetString3.Name = "presetString3";
             this.presetString3.Size = new System.Drawing.Size(147, 51);
             this.presetString3.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.presetString3, resources.GetString("presetString3.ToolTip"));
             // 
             // label26
             // 
@@ -1247,6 +1278,7 @@
             this.presetString4.Name = "presetString4";
             this.presetString4.Size = new System.Drawing.Size(147, 51);
             this.presetString4.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.presetString4, resources.GetString("presetString4.ToolTip"));
             // 
             // label34
             // 
@@ -1489,6 +1521,7 @@
             this.presetString5.Name = "presetString5";
             this.presetString5.Size = new System.Drawing.Size(147, 51);
             this.presetString5.TabIndex = 53;
+            this.toolTip1.SetToolTip(this.presetString5, resources.GetString("presetString5.ToolTip"));
             // 
             // label67
             // 
@@ -1550,6 +1583,249 @@
             this.label72.Size = new System.Drawing.Size(58, 12);
             this.label72.TabIndex = 56;
             this.label72.Text = "プリセット名";
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.label77);
+            this.tabPage6.Controls.Add(this.textBoxFPS6);
+            this.tabPage6.Controls.Add(this.label78);
+            this.tabPage6.Controls.Add(this.label79);
+            this.tabPage6.Controls.Add(this.label80);
+            this.tabPage6.Controls.Add(this.presetVideo6);
+            this.tabPage6.Controls.Add(this.presetFonts6);
+            this.tabPage6.Controls.Add(this.presetName6);
+            this.tabPage6.Controls.Add(this.label81);
+            this.tabPage6.Controls.Add(this.presetTest6);
+            this.tabPage6.Controls.Add(this.presetReso6);
+            this.tabPage6.Controls.Add(this.presetDevice6);
+            this.tabPage6.Controls.Add(this.label82);
+            this.tabPage6.Controls.Add(this.presetArea6);
+            this.tabPage6.Controls.Add(this.presetButton6);
+            this.tabPage6.Controls.Add(this.presetpictureBox6);
+            this.tabPage6.Controls.Add(this.presetString6);
+            this.tabPage6.Controls.Add(this.label83);
+            this.tabPage6.Controls.Add(this.label84);
+            this.tabPage6.Controls.Add(this.presetRoi6);
+            this.tabPage6.Controls.Add(this.label85);
+            this.tabPage6.Controls.Add(this.label86);
+            this.tabPage6.Controls.Add(this.label87);
+            this.tabPage6.Controls.Add(this.label88);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(609, 313);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "プリセット6";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Location = new System.Drawing.Point(130, 147);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(45, 12);
+            this.label77.TabIndex = 74;
+            this.label77.Text = "0で実測";
+            // 
+            // textBoxFPS6
+            // 
+            this.textBoxFPS6.Location = new System.Drawing.Point(84, 143);
+            this.textBoxFPS6.Name = "textBoxFPS6";
+            this.textBoxFPS6.Size = new System.Drawing.Size(40, 19);
+            this.textBoxFPS6.TabIndex = 93;
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(11, 147);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(60, 12);
+            this.label78.TabIndex = 92;
+            this.label78.Text = "動画のFPS";
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(235, 287);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(194, 12);
+            this.label79.TabIndex = 91;
+            this.label79.Text = "(左上x,左上y,font size,color,文字列,...)";
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(82, 193);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(139, 12);
+            this.label80.TabIndex = 90;
+            this.label80.Text = "(左上x,左上y,右下x,右下y)";
+            // 
+            // presetVideo6
+            // 
+            this.presetVideo6.AutoSize = true;
+            this.presetVideo6.Location = new System.Drawing.Point(84, 121);
+            this.presetVideo6.Name = "presetVideo6";
+            this.presetVideo6.Size = new System.Drawing.Size(149, 16);
+            this.presetVideo6.TabIndex = 89;
+            this.presetVideo6.Text = "動画を出力フォルダに保存";
+            this.presetVideo6.UseVisualStyleBackColor = true;
+            // 
+            // presetFonts6
+            // 
+            this.presetFonts6.FormattingEnabled = true;
+            this.presetFonts6.Location = new System.Drawing.Point(84, 211);
+            this.presetFonts6.Name = "presetFonts6";
+            this.presetFonts6.Size = new System.Drawing.Size(121, 20);
+            this.presetFonts6.TabIndex = 76;
+            // 
+            // presetName6
+            // 
+            this.presetName6.Location = new System.Drawing.Point(84, 12);
+            this.presetName6.Name = "presetName6";
+            this.presetName6.Size = new System.Drawing.Size(121, 19);
+            this.presetName6.TabIndex = 70;
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(11, 42);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(41, 12);
+            this.label81.TabIndex = 88;
+            this.label81.Text = "検査名";
+            // 
+            // presetTest6
+            // 
+            this.presetTest6.FormattingEnabled = true;
+            this.presetTest6.Location = new System.Drawing.Point(84, 39);
+            this.presetTest6.Name = "presetTest6";
+            this.presetTest6.Size = new System.Drawing.Size(121, 20);
+            this.presetTest6.TabIndex = 71;
+            // 
+            // presetReso6
+            // 
+            this.presetReso6.FormattingEnabled = true;
+            this.presetReso6.Location = new System.Drawing.Point(84, 95);
+            this.presetReso6.Name = "presetReso6";
+            this.presetReso6.Size = new System.Drawing.Size(121, 20);
+            this.presetReso6.TabIndex = 73;
+            // 
+            // presetDevice6
+            // 
+            this.presetDevice6.FormattingEnabled = true;
+            this.presetDevice6.Location = new System.Drawing.Point(84, 67);
+            this.presetDevice6.Name = "presetDevice6";
+            this.presetDevice6.Size = new System.Drawing.Size(121, 20);
+            this.presetDevice6.TabIndex = 72;
+            this.presetDevice6.SelectedIndexChanged += new System.EventHandler(this.presetDevice6_SelectedIndexChanged);
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(330, 264);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(48, 12);
+            this.label82.TabIndex = 87;
+            this.label82.Text = "ROI座標";
+            // 
+            // presetArea6
+            // 
+            this.presetArea6.Location = new System.Drawing.Point(387, 261);
+            this.presetArea6.Name = "presetArea6";
+            this.presetArea6.Size = new System.Drawing.Size(100, 19);
+            this.presetArea6.TabIndex = 79;
+            // 
+            // presetButton6
+            // 
+            this.presetButton6.Location = new System.Drawing.Point(237, 259);
+            this.presetButton6.Name = "presetButton6";
+            this.presetButton6.Size = new System.Drawing.Size(75, 23);
+            this.presetButton6.TabIndex = 78;
+            this.presetButton6.Text = "画像参照";
+            this.presetButton6.UseVisualStyleBackColor = true;
+            this.presetButton6.Click += new System.EventHandler(this.presetButton6_Click);
+            // 
+            // presetpictureBox6
+            // 
+            this.presetpictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.presetpictureBox6.Location = new System.Drawing.Point(237, 12);
+            this.presetpictureBox6.Name = "presetpictureBox6";
+            this.presetpictureBox6.Size = new System.Drawing.Size(360, 240);
+            this.presetpictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.presetpictureBox6.TabIndex = 86;
+            this.presetpictureBox6.TabStop = false;
+            this.presetpictureBox6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.presetpictureBox6_MouseDown);
+            // 
+            // presetString6
+            // 
+            this.presetString6.Location = new System.Drawing.Point(84, 249);
+            this.presetString6.Multiline = true;
+            this.presetString6.Name = "presetString6";
+            this.presetString6.Size = new System.Drawing.Size(147, 51);
+            this.presetString6.TabIndex = 77;
+            this.toolTip1.SetToolTip(this.presetString6, resources.GetString("presetString6.ToolTip"));
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(11, 252);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(41, 12);
+            this.label83.TabIndex = 85;
+            this.label83.Text = "文字列";
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(11, 213);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(62, 12);
+            this.label84.TabIndex = 84;
+            this.label84.Text = "文字フォント";
+            // 
+            // presetRoi6
+            // 
+            this.presetRoi6.Location = new System.Drawing.Point(84, 171);
+            this.presetRoi6.Name = "presetRoi6";
+            this.presetRoi6.Size = new System.Drawing.Size(100, 19);
+            this.presetRoi6.TabIndex = 75;
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(11, 174);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(65, 12);
+            this.label85.TabIndex = 83;
+            this.label85.Text = "ROI切り抜き";
+            // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(11, 98);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(41, 12);
+            this.label86.TabIndex = 82;
+            this.label86.Text = "解像度";
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(11, 70);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(67, 12);
+            this.label87.TabIndex = 81;
+            this.label87.Text = "入力デバイス";
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(11, 15);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(58, 12);
+            this.label88.TabIndex = 80;
+            this.label88.Text = "プリセット名";
             // 
             // openFileDialog1
             // 
@@ -1995,6 +2271,9 @@
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.presetpictureBox5)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.presetpictureBox6)).EndInit();
             this.groupBoxRSB.ResumeLayout(false);
             this.groupBoxRSB.PerformLayout();
             this.groupBoxTemp.ResumeLayout(false);
@@ -2184,5 +2463,30 @@
         private System.Windows.Forms.CheckBox checkBoxShift2;
         private System.Windows.Forms.CheckBox checkBoxCtrl2;
         private System.Windows.Forms.Label label76;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.Label label77;
+        private System.Windows.Forms.TextBox textBoxFPS6;
+        private System.Windows.Forms.Label label78;
+        private System.Windows.Forms.Label label79;
+        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.CheckBox presetVideo6;
+        private System.Windows.Forms.ComboBox presetFonts6;
+        private System.Windows.Forms.TextBox presetName6;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.ComboBox presetTest6;
+        private System.Windows.Forms.ComboBox presetReso6;
+        private System.Windows.Forms.ComboBox presetDevice6;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.TextBox presetArea6;
+        private System.Windows.Forms.Button presetButton6;
+        private System.Windows.Forms.PictureBox presetpictureBox6;
+        private System.Windows.Forms.TextBox presetString6;
+        private System.Windows.Forms.Label label83;
+        private System.Windows.Forms.Label label84;
+        private System.Windows.Forms.TextBox presetRoi6;
+        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.Label label86;
+        private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.Label label88;
     }
 }
