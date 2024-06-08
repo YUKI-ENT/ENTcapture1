@@ -192,6 +192,8 @@ namespace ENTcapture
             resetWB();
             resetGamma();
             filterFlip = 10;
+            //フィルターを解除
+            checkBoxWB.Checked = false;
 
             using (var vcap = new VideoCapture(file))
             using (var m = new Mat())
@@ -430,8 +432,8 @@ namespace ENTcapture
                             this.Activate();
                             this.BringToFront();
 
-                            //フィルターを解除
-                            checkBoxWB.Checked = false;
+                            ////フィルターを解除
+                            //checkBoxWB.Checked = false;
 
                             Task playTask = playVideoAsync(videofile);
                             tasks.Add(playTask);
