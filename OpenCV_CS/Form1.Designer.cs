@@ -101,6 +101,9 @@
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
+            this.checkBoxFlipY = new System.Windows.Forms.CheckBox();
+            this.checkBoxFlipX = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -413,6 +416,9 @@
             // 
             // panelMenu
             // 
+            this.panelMenu.Controls.Add(this.label9);
+            this.panelMenu.Controls.Add(this.checkBoxFlipX);
+            this.panelMenu.Controls.Add(this.checkBoxFlipY);
             this.panelMenu.Controls.Add(this.label8);
             this.panelMenu.Controls.Add(this.buttonFilterDelete);
             this.panelMenu.Controls.Add(this.listBoxFilters);
@@ -434,7 +440,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 378);
+            this.label8.Location = new System.Drawing.Point(12, 402);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(132, 36);
             this.label8.TabIndex = 19;
@@ -442,7 +448,7 @@
             // 
             // buttonFilterDelete
             // 
-            this.buttonFilterDelete.Location = new System.Drawing.Point(76, 432);
+            this.buttonFilterDelete.Location = new System.Drawing.Point(76, 456);
             this.buttonFilterDelete.Name = "buttonFilterDelete";
             this.buttonFilterDelete.Size = new System.Drawing.Size(51, 23);
             this.buttonFilterDelete.TabIndex = 18;
@@ -454,7 +460,7 @@
             // 
             this.listBoxFilters.FormattingEnabled = true;
             this.listBoxFilters.ItemHeight = 12;
-            this.listBoxFilters.Location = new System.Drawing.Point(14, 461);
+            this.listBoxFilters.Location = new System.Drawing.Point(14, 485);
             this.listBoxFilters.Name = "listBoxFilters";
             this.listBoxFilters.Size = new System.Drawing.Size(115, 76);
             this.listBoxFilters.TabIndex = 17;
@@ -462,7 +468,7 @@
             // 
             // buttonFilterAdd
             // 
-            this.buttonFilterAdd.Location = new System.Drawing.Point(14, 432);
+            this.buttonFilterAdd.Location = new System.Drawing.Point(14, 456);
             this.buttonFilterAdd.Name = "buttonFilterAdd";
             this.buttonFilterAdd.Size = new System.Drawing.Size(56, 23);
             this.buttonFilterAdd.TabIndex = 16;
@@ -880,6 +886,39 @@
             this.labelFrames.TabIndex = 50;
             this.labelFrames.Text = "0/0";
             // 
+            // checkBoxFlipY
+            // 
+            this.checkBoxFlipY.AutoSize = true;
+            this.checkBoxFlipY.Location = new System.Drawing.Point(32, 337);
+            this.checkBoxFlipY.Name = "checkBoxFlipY";
+            this.checkBoxFlipY.Size = new System.Drawing.Size(48, 16);
+            this.checkBoxFlipY.TabIndex = 20;
+            this.checkBoxFlipY.Text = "左右";
+            this.toolTip1.SetToolTip(this.checkBoxFlipY, "鏡像反転します");
+            this.checkBoxFlipY.UseVisualStyleBackColor = true;
+            this.checkBoxFlipY.CheckedChanged += new System.EventHandler(this.checkBoxFlipY_CheckedChanged);
+            // 
+            // checkBoxFlipX
+            // 
+            this.checkBoxFlipX.AutoSize = true;
+            this.checkBoxFlipX.Location = new System.Drawing.Point(86, 337);
+            this.checkBoxFlipX.Name = "checkBoxFlipX";
+            this.checkBoxFlipX.Size = new System.Drawing.Size(48, 16);
+            this.checkBoxFlipX.TabIndex = 21;
+            this.checkBoxFlipX.Text = "上下";
+            this.toolTip1.SetToolTip(this.checkBoxFlipX, "上下反転します");
+            this.checkBoxFlipX.UseVisualStyleBackColor = true;
+            this.checkBoxFlipX.CheckedChanged += new System.EventHandler(this.checkBoxFlipX_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(15, 322);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(29, 12);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "反転";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1031,6 +1070,9 @@
         private System.Windows.Forms.ToolStripButton toolStripOpenLogFile;
         private System.Windows.Forms.ToolStripButton toolStripReloadButton;
         private System.Windows.Forms.RadioButton radioButton6;
+        private System.Windows.Forms.CheckBox checkBoxFlipX;
+        private System.Windows.Forms.CheckBox checkBoxFlipY;
+        private System.Windows.Forms.Label label9;
     }
 }
 

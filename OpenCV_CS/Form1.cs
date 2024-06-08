@@ -4,7 +4,9 @@
 using Accord.Imaging.Filters;
 using Accord.Video;
 using Accord.Video.DirectShow;
+using Npgsql;
 using OpenCvSharp;
+using OpenCvSharp.Extensions;
 ////using Brush = System.Drawing.Brush;
 using Shell32;
 using System;
@@ -18,11 +20,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Npgsql;
-using OpenCvSharp.Extensions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Reflection.Emit;
-using System.Security.Policy;
 
 namespace ENTcapture
 {
@@ -64,6 +61,7 @@ namespace ENTcapture
         private bool view = false;
         private int[] filterWB = new int[4] { 0, 255, 255, 255 }; // onoff, r,g,b
         private int[] filterGamma = new int[2] { 0, 10 }; //onoff, gamma*10 
+        private int filterFlip = 10; //10:Off, 0:上下、1:左右、-1：上下左右
         private bool lockBmp = false;
         public bool lockOutbmp = false;
         private bool MouseUpFlag = false;
@@ -189,6 +187,11 @@ namespace ENTcapture
             Debug.WriteLine("readVideoAsync is called.");
 
             semaphore.WaitOne(); // semaphore から排他的なアクセス権を取得します
+
+            //フィルタ値をデフォルトにする
+            resetWB();
+            resetGamma();
+            filterFlip = 10;
 
             using (var vcap = new VideoCapture(file))
             using (var m = new Mat())
@@ -347,7 +350,7 @@ namespace ENTcapture
 
                         drawStatus(1);
 
-                        loadFilter();
+                        loadFilter(); //デバイスリストに存在すればここでフィルターがOnになる
 
                         connectVideo();
                         videoSource.VideoResolution = videoCapabilities[toolStripComboBoxResolution.SelectedIndex];
@@ -419,21 +422,22 @@ namespace ENTcapture
                                 //await rsbTask;
                                 tasks.Add(rsbTask);
                             }
-                            //録画したファイルをロードする
+                            
+                            //録画したファイルを再生する
                             playmode = 3; //再生中 0:stop,1:recstandby, 2:rec, 3:play, 4:pause
                             trackBar1.Value = 0;
 
                             this.Activate();
                             this.BringToFront();
 
+                            //フィルターを解除
+                            checkBoxWB.Checked = false;
+
                             Task playTask = playVideoAsync(videofile);
                             tasks.Add(playTask);
 
                             // すべてのタスクが完了するのを待つ
                             await Task.WhenAll(tasks);
-                            
-                            //await playVideoAsync(videofile);
-
                         }
                         else //プレビューのみの場合
                         {
@@ -689,16 +693,8 @@ namespace ENTcapture
             try
             {
                 //Filter 適用
-                if (MouseUpFlag) // フィルタ領域の設定完了→RBG平均を数値ボックスにセット
-                {
-                    await Task.Run(() =>
-                    {
-                        getRGBaverage(bitmap, Math.Min(MD.X, MU.X), Math.Min(MD.Y, MU.Y), Math.Max(MD.X, MU.X), Math.Max(MD.Y, MU.Y));
-                    });
-                    MouseUpFlag = false;
-                }
 
-                if (checkBoxWB.Checked || (Rec && filterWB[0] == 1))
+                if (checkBoxWB.Checked)
                 {
                     await ApplyWBasync(bitmap, filterWB[1], filterWB[2], filterWB[3]);
 
@@ -706,6 +702,19 @@ namespace ENTcapture
                     {
                         await ApplyGammaAsync(bitmap, (float)filterGamma[1] / 10);
                     }
+
+                    if(filterFlip != 10) //Flip
+                    {
+                        bitmap.RotateFlip(OpenCVFilterMode2RotationFlipType(filterFlip));
+                    }
+                }
+                if (MouseUpFlag) // フィルタ領域の設定完了→RBG平均を数値ボックスにセット
+                {
+                    await Task.Run(() =>
+                    {
+                        getRGBaverage(bitmap, Math.Min(MD.X, MU.X), Math.Min(MD.Y, MU.Y), Math.Max(MD.X, MU.X), Math.Max(MD.Y, MU.Y));
+                    });
+                    MouseUpFlag = false;
                 }
 
                 // 複数の非同期処理を同時に開始
@@ -1165,6 +1174,9 @@ namespace ENTcapture
 
                 //FPS
                 presetFPS = FPS;
+
+                //フィルタをロード
+                loadFilter();
 
                 LogEvents("プリセットデバイス:" + presetDevice + "の設定をロードしました");
             }
@@ -1812,20 +1824,27 @@ namespace ENTcapture
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (checkBoxWB.Checked)
+            if (pictureBox1.Image != null)
             {
-                MU = new System.Drawing.Point(0, 0);
-                // 描画フラグON
-                view = true;
-
-                // Mouseを押した座標を記録
-                MD = Form2.ConvertCoordinates(e.Location, this.pictureBox1);
-
-                if(MD.X <  0 || MD.Y < 0)
+                if (checkBoxWB.Checked)
                 {
-                    MessageBox.Show("画像範囲外を選択しています。画像内を指定してください。");
-                    view = false;
+                    MU = new System.Drawing.Point(0, 0);
+                    // 描画フラグON
+                    view = true;
+
+                    // Mouseを押した座標を記録
+                    MD = Form2.ConvertCoordinates(e.Location, this.pictureBox1);
+
+                    if (MD.X < 0 || MD.Y < 0)
+                    {
+                        MessageBox.Show("画像範囲外を選択しています。画像内を指定してください。");
+                        view = false;
+                    }
                 }
+            }
+            else
+            {
+                MessageBox.Show("キャプチャ中か動画再生中のみ有効な操作です");
             }
         }
 
@@ -1841,7 +1860,7 @@ namespace ENTcapture
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (checkBoxWB.Checked && view)
+            if (pictureBox1.Image != null && checkBoxWB.Checked && view)
             {
                 MC = Form2.ConvertCoordinates(e.Location, pictureBox1);
 
@@ -1850,10 +1869,25 @@ namespace ENTcapture
 
         private void buttonGammaReset_Click(object sender, EventArgs e)
         {
+            resetGamma();
+        }
+
+        private void resetGamma()
+        {
             trackBarGamma.Value = 10;
             textBoxGamma.Text = "1";
             filterGamma[0] = 0;
             filterGamma[1] = 10;
+        }
+
+        private void resetWB()
+        {
+            filterWB[1] = 255;
+            filterWB[2] = 255;
+            filterWB[3] = 255;
+            numericUpDownR.Value = 255;
+            numericUpDownG.Value = 255;
+            numericUpDownB.Value = 255;
         }
 
         private void buttonFilterAdd_Click(object sender, EventArgs e)
@@ -1877,14 +1911,15 @@ namespace ENTcapture
                     }
                 }
                 strFilters += devicename + ","
-                           + filterWB[1].ToString() + ","
-                           + filterWB[2].ToString() + ","
-                           + filterWB[3].ToString() + ","
-                           + filterGamma[1].ToString();
+                           + numericUpDownR.Value.ToString() + ","
+                           + numericUpDownG.Value.ToString() + ","
+                           + numericUpDownB.Value.ToString() + ","
+                           + filterGamma[1].ToString() + ","
+                           + filterFlip.ToString();
 
                 strFilters.Trim(';');
 
-                Debug.WriteLine("Filter Add:" + strFilters);
+                LogEvents("Filter Add:" + strFilters);
 
                 Properties.Settings.Default.filter = strFilters;
                 Properties.Settings.Default.Save();
@@ -1906,13 +1941,38 @@ namespace ENTcapture
             for (int i = 0; i < filterlist.Length; i++)
             {
                 string[] strF = filterlist[i].Split(',');
-                if (strF.Length == 5 && strF[0] == toolStripComboDevices.Text)
+               
+                if (strF[0] == toolStripComboDevices.Text) //保存フィルタの中に現在のデバイス名があった場合
                 {
-                    filterWB[1] = int.Parse(strF[1]);
-                    filterWB[2] = int.Parse(strF[2]);
-                    filterWB[3] = int.Parse(strF[3]);
-                    filterGamma[1] = int.Parse(strF[4]);
-                    filterWB[0] = 1;
+                    LogEvents("フィルタを読み込みました：" + filterlist[i]);
+                    if (strF.Length >= 5)
+                    {
+                        filterWB[1] = int.Parse(strF[1]);
+                        filterWB[2] = int.Parse(strF[2]);
+                        filterWB[3] = int.Parse(strF[3]);
+                        filterGamma[1] = int.Parse(strF[4]);
+                        filterWB[0] = 1;
+
+                        // Flip added
+                        if (strF.Length >= 6)
+                        {
+                            filterFlip = int.Parse(strF[5]);
+                        }
+
+                        //UI表示
+                        checkBoxWB.Checked = (filterWB[0] == 1) ? true : false;
+                        numericUpDownR.Value = filterWB[1];
+                        numericUpDownG.Value = filterWB[2];
+                        numericUpDownB.Value = filterWB[3];
+                        trackBarGamma.Value = filterGamma[1];
+                        textBoxGamma.Text = ((float)filterGamma[1] / 10).ToString("f1");
+                        checkBoxFlipY.Checked = (filterFlip == 0 || filterFlip == -1) ? true : false;
+                        checkBoxFlipX.Checked = (filterFlip == 1 || filterFlip == -1) ? true : false;
+
+                    }
+                } else
+                {
+                    checkBoxWB.Checked = false;
                 }
             }
 
@@ -1996,7 +2056,7 @@ namespace ENTcapture
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (checkBoxWB.Checked && view)
+            if (pictureBox1.Image != null && checkBoxWB.Checked && view)
             {
                 MU = Form2.ConvertCoordinates(e.Location, pictureBox1);
                 // 描画フラグOFF
@@ -2145,45 +2205,43 @@ namespace ENTcapture
 
         private void checkBoxWB_CheckedChanged(object sender, EventArgs e)
         {
-            if (pictureBox1.Image != null)
+            if (checkBoxWB.Checked)
             {
-                if (checkBoxWB.Checked)
-                {
-                    labelR.Enabled = true;
-                    labelG.Enabled = true;
-                    labelB.Enabled = true;
-                    numericUpDownR.Enabled = true;
-                    numericUpDownG.Enabled = true;
-                    numericUpDownB.Enabled = true;
-
-                    trackBarGamma.Enabled = true;
-                    textBoxGamma.Enabled = true;
-                    buttonGammaReset.Enabled = true;
-                }
-                else
-                {
-                    labelR.Enabled = false;
-                    labelG.Enabled = false;
-                    labelB.Enabled = false;
-                    numericUpDownR.Enabled = false;
-                    numericUpDownG.Enabled = false;
-                    numericUpDownB.Enabled = false;
-
-                    trackBarGamma.Enabled = false;
-                    textBoxGamma.Enabled = false;
-                    buttonGammaReset.Enabled = false;
-                }
+                setFilterButtons(true);
             }
             else
             {
-                if (checkBoxWB.Checked)
-                {
-                    MessageBox.Show("ビデオデバイスを開くか動画ファイルを開いてから実行してください");
-                    checkBoxWB.Checked = false;
-                }
+                setFilterButtons(false);
             }
+            
         }
 
+        private void setFilterButtons(bool buttonState)
+        {
+            //UI表示
+            numericUpDownR.Value = filterWB[1];
+            numericUpDownG.Value = filterWB[2];
+            numericUpDownB.Value = filterWB[3];
+            trackBarGamma.Value = filterGamma[1];
+            textBoxGamma.Text = ((float)filterGamma[1] / 10).ToString("f1");
+            checkBoxFlipY.Checked = (filterFlip == 0 || filterFlip == -1) ? true : false;
+            checkBoxFlipX.Checked = (filterFlip == 1 || filterFlip == -1) ? true : false;
+
+
+            labelR.Enabled = buttonState;
+            labelG.Enabled = buttonState;
+            labelB.Enabled = buttonState;
+            numericUpDownR.Enabled = buttonState;
+            numericUpDownG.Enabled = buttonState;
+            numericUpDownB.Enabled = buttonState;
+
+            trackBarGamma.Enabled = buttonState;
+            textBoxGamma.Enabled = buttonState;
+            buttonGammaReset.Enabled = buttonState;
+
+            checkBoxFlipX.Enabled = buttonState;
+            checkBoxFlipY.Enabled = buttonState;
+        }
       
         private void ctlLock(int mod) // mode: 0 キャプチャ中、1:再生中、 待機状態
         {
@@ -2333,6 +2391,51 @@ namespace ENTcapture
             loadFilter();
 
             LogEvents("デバイスを再スキャンしました");
+        }
+
+        private void checkBoxFlipY_CheckedChanged(object sender, EventArgs e)
+        {
+            calcFilterFlip();
+        }
+
+        private void calcFilterFlip()
+        {
+            if (checkBoxFlipY.Checked && checkBoxFlipX.Checked)
+            {
+                filterFlip = -1;
+            }
+            else if (checkBoxFlipY.Checked)
+            {
+                filterFlip = 0;
+            }
+            else if (checkBoxFlipX.Checked)
+            {
+                filterFlip = 1;
+            }
+            else
+            {
+                filterFlip = 10;
+            }
+        }
+
+        private System.Drawing.RotateFlipType  OpenCVFilterMode2RotationFlipType(int filterFlip)
+        {
+            switch (filterFlip)
+            {
+                case 0:
+                    return RotateFlipType.RotateNoneFlipX;
+                case 1:
+                    return RotateFlipType.RotateNoneFlipY;
+                case -1: 
+                    return RotateFlipType.RotateNoneFlipXY;
+                default:
+                    return RotateFlipType.RotateNoneFlipNone;
+            }
+        }
+
+        private void checkBoxFlipX_CheckedChanged(object sender, EventArgs e)
+        {
+            calcFilterFlip();
         }
 
         private async Task EncodeMovie(string inputFile, string outDir, int sizeMB, string codec)
