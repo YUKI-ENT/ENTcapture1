@@ -60,6 +60,9 @@
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonEnd = new System.Windows.Forms.Button();
             this.panelMenu = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.checkBoxFlipX = new System.Windows.Forms.CheckBox();
+            this.checkBoxFlipY = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.buttonFilterDelete = new System.Windows.Forms.Button();
             this.listBoxFilters = new System.Windows.Forms.ListBox();
@@ -101,9 +104,6 @@
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
-            this.checkBoxFlipY = new System.Windows.Forms.CheckBox();
-            this.checkBoxFlipX = new System.Windows.Forms.CheckBox();
-            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -437,6 +437,41 @@
             this.panelMenu.Size = new System.Drawing.Size(148, 566);
             this.panelMenu.TabIndex = 44;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(15, 322);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(29, 12);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "反転";
+            // 
+            // checkBoxFlipX
+            // 
+            this.checkBoxFlipX.AutoSize = true;
+            this.checkBoxFlipX.Enabled = false;
+            this.checkBoxFlipX.Location = new System.Drawing.Point(86, 337);
+            this.checkBoxFlipX.Name = "checkBoxFlipX";
+            this.checkBoxFlipX.Size = new System.Drawing.Size(48, 16);
+            this.checkBoxFlipX.TabIndex = 21;
+            this.checkBoxFlipX.Text = "上下";
+            this.toolTip1.SetToolTip(this.checkBoxFlipX, "上下反転します");
+            this.checkBoxFlipX.UseVisualStyleBackColor = true;
+            this.checkBoxFlipX.CheckedChanged += new System.EventHandler(this.checkBoxFlipX_CheckedChanged);
+            // 
+            // checkBoxFlipY
+            // 
+            this.checkBoxFlipY.AutoSize = true;
+            this.checkBoxFlipY.Enabled = false;
+            this.checkBoxFlipY.Location = new System.Drawing.Point(32, 337);
+            this.checkBoxFlipY.Name = "checkBoxFlipY";
+            this.checkBoxFlipY.Size = new System.Drawing.Size(48, 16);
+            this.checkBoxFlipY.TabIndex = 20;
+            this.checkBoxFlipY.Text = "左右";
+            this.toolTip1.SetToolTip(this.checkBoxFlipY, "鏡像反転します");
+            this.checkBoxFlipY.UseVisualStyleBackColor = true;
+            this.checkBoxFlipY.CheckedChanged += new System.EventHandler(this.checkBoxFlipY_CheckedChanged);
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -532,6 +567,7 @@
             this.numericUpDownB.Name = "numericUpDownB";
             this.numericUpDownB.Size = new System.Drawing.Size(37, 19);
             this.numericUpDownB.TabIndex = 5;
+            this.numericUpDownB.ValueChanged += new System.EventHandler(this.numericUpDownB_ValueChanged);
             // 
             // numericUpDownR
             // 
@@ -545,6 +581,7 @@
             this.numericUpDownR.Name = "numericUpDownR";
             this.numericUpDownR.Size = new System.Drawing.Size(37, 19);
             this.numericUpDownR.TabIndex = 3;
+            this.numericUpDownR.ValueChanged += new System.EventHandler(this.numericUpDownR_ValueChanged);
             // 
             // numericUpDownG
             // 
@@ -558,6 +595,7 @@
             this.numericUpDownG.Name = "numericUpDownG";
             this.numericUpDownG.Size = new System.Drawing.Size(37, 19);
             this.numericUpDownG.TabIndex = 4;
+            this.numericUpDownG.ValueChanged += new System.EventHandler(this.numericUpDownG_ValueChanged);
             // 
             // labelB
             // 
@@ -885,39 +923,6 @@
             this.labelFrames.Size = new System.Drawing.Size(26, 12);
             this.labelFrames.TabIndex = 50;
             this.labelFrames.Text = "0/0";
-            // 
-            // checkBoxFlipY
-            // 
-            this.checkBoxFlipY.AutoSize = true;
-            this.checkBoxFlipY.Location = new System.Drawing.Point(32, 337);
-            this.checkBoxFlipY.Name = "checkBoxFlipY";
-            this.checkBoxFlipY.Size = new System.Drawing.Size(48, 16);
-            this.checkBoxFlipY.TabIndex = 20;
-            this.checkBoxFlipY.Text = "左右";
-            this.toolTip1.SetToolTip(this.checkBoxFlipY, "鏡像反転します");
-            this.checkBoxFlipY.UseVisualStyleBackColor = true;
-            this.checkBoxFlipY.CheckedChanged += new System.EventHandler(this.checkBoxFlipY_CheckedChanged);
-            // 
-            // checkBoxFlipX
-            // 
-            this.checkBoxFlipX.AutoSize = true;
-            this.checkBoxFlipX.Location = new System.Drawing.Point(86, 337);
-            this.checkBoxFlipX.Name = "checkBoxFlipX";
-            this.checkBoxFlipX.Size = new System.Drawing.Size(48, 16);
-            this.checkBoxFlipX.TabIndex = 21;
-            this.checkBoxFlipX.Text = "上下";
-            this.toolTip1.SetToolTip(this.checkBoxFlipX, "上下反転します");
-            this.checkBoxFlipX.UseVisualStyleBackColor = true;
-            this.checkBoxFlipX.CheckedChanged += new System.EventHandler(this.checkBoxFlipX_CheckedChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(15, 322);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(29, 12);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "反転";
             // 
             // Form1
             // 
