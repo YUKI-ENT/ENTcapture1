@@ -9,7 +9,7 @@ ENTcaptureは、DirectShow対応ビデオキャプチャーデバイスから動
 - Windows7、8.1、10、11 (64bit/32bit)
 - メモリは4GB以上推奨
 - Intel Core i5 2500 3.3GHz以上が必要
-- .NET framework 4.7.2以上が必要
+- .NET framework 4.8
 
 ## 対応キャプチャーデバイス（当方で使用実績のあるもの。これ以外もDirectShow対応であればだいたい動きます。）
 - IEEE1394 DVキャプチャ（ADVC300、Twinpact110等）
