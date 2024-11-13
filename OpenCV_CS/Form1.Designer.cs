@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelMessage = new System.Windows.Forms.Label();
             this.buttonExit = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -104,6 +103,8 @@
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
+            this.checkBoxOpenCVmode = new System.Windows.Forms.CheckBox();
+            this.checkBoxSwapAsync = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -123,11 +124,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBar)).BeginInit();
             this.SuspendLayout();
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
             // 
             // labelMessage
             // 
@@ -924,11 +920,36 @@
             this.labelFrames.TabIndex = 50;
             this.labelFrames.Text = "0/0";
             // 
+            // checkBoxOpenCVmode
+            // 
+            this.checkBoxOpenCVmode.AutoSize = true;
+            this.checkBoxOpenCVmode.Location = new System.Drawing.Point(784, 28);
+            this.checkBoxOpenCVmode.Name = "checkBoxOpenCVmode";
+            this.checkBoxOpenCVmode.Size = new System.Drawing.Size(126, 16);
+            this.checkBoxOpenCVmode.TabIndex = 52;
+            this.checkBoxOpenCVmode.Text = "Capture by OpenCV";
+            this.checkBoxOpenCVmode.UseVisualStyleBackColor = true;
+            this.checkBoxOpenCVmode.Visible = false;
+            this.checkBoxOpenCVmode.CheckedChanged += new System.EventHandler(this.checkBoxOpenCVmode_CheckedChanged);
+            // 
+            // checkBoxSwapAsync
+            // 
+            this.checkBoxSwapAsync.AutoSize = true;
+            this.checkBoxSwapAsync.Location = new System.Drawing.Point(784, 50);
+            this.checkBoxSwapAsync.Name = "checkBoxSwapAsync";
+            this.checkBoxSwapAsync.Size = new System.Drawing.Size(84, 16);
+            this.checkBoxSwapAsync.TabIndex = 53;
+            this.checkBoxSwapAsync.Text = "非同期描画";
+            this.checkBoxSwapAsync.UseVisualStyleBackColor = true;
+            this.checkBoxSwapAsync.CheckedChanged += new System.EventHandler(this.checkBoxSwapAsync_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(930, 779);
+            this.Controls.Add(this.checkBoxSwapAsync);
+            this.Controls.Add(this.checkBoxOpenCVmode);
             this.Controls.Add(this.radioButton6);
             this.Controls.Add(this.labelFrames);
             this.Controls.Add(this.comboBoxName);
@@ -1007,7 +1028,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelMessage;
         private System.Windows.Forms.Button buttonExit;
         private System.Windows.Forms.Button buttonSnap;
@@ -1078,6 +1098,8 @@
         private System.Windows.Forms.CheckBox checkBoxFlipX;
         private System.Windows.Forms.CheckBox checkBoxFlipY;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox checkBoxOpenCVmode;
+        private System.Windows.Forms.CheckBox checkBoxSwapAsync;
     }
 }
 

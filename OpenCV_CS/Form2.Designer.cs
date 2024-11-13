@@ -217,6 +217,7 @@
             this.checkBoxTemp = new System.Windows.Forms.CheckBox();
             this.comboBoxReCodec = new System.Windows.Forms.ComboBox();
             this.textBoxPGaddress = new System.Windows.Forms.TextBox();
+            this.textBoxMaxFPS = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxRSB = new System.Windows.Forms.GroupBox();
@@ -232,6 +233,7 @@
             this.checkBoxShift2 = new System.Windows.Forms.CheckBox();
             this.checkBoxCtrl2 = new System.Windows.Forms.CheckBox();
             this.label76 = new System.Windows.Forms.Label();
+            this.label89 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.presetPictureBox1)).BeginInit();
@@ -497,6 +499,7 @@
             this.presetReso1.Name = "presetReso1";
             this.presetReso1.Size = new System.Drawing.Size(121, 20);
             this.presetReso1.TabIndex = 3;
+            this.presetReso1.SelectedIndexChanged += new System.EventHandler(this.presetReso1_SelectedIndexChanged);
             // 
             // presetDevice1
             // 
@@ -741,6 +744,7 @@
             this.presetReso2.Name = "presetReso2";
             this.presetReso2.Size = new System.Drawing.Size(121, 20);
             this.presetReso2.TabIndex = 3;
+            this.presetReso2.SelectedIndexChanged += new System.EventHandler(this.presetReso2_SelectedIndexChanged);
             // 
             // presetDevice2
             // 
@@ -982,6 +986,7 @@
             this.presetReso3.Name = "presetReso3";
             this.presetReso3.Size = new System.Drawing.Size(121, 20);
             this.presetReso3.TabIndex = 3;
+            this.presetReso3.SelectedIndexChanged += new System.EventHandler(this.presetReso3_SelectedIndexChanged);
             // 
             // presetDevice3
             // 
@@ -1224,6 +1229,7 @@
             this.presetReso4.Name = "presetReso4";
             this.presetReso4.Size = new System.Drawing.Size(121, 20);
             this.presetReso4.TabIndex = 3;
+            this.presetReso4.SelectedIndexChanged += new System.EventHandler(this.presetReso4_SelectedIndexChanged);
             // 
             // presetDevice4
             // 
@@ -1467,6 +1473,7 @@
             this.presetReso5.Name = "presetReso5";
             this.presetReso5.Size = new System.Drawing.Size(121, 20);
             this.presetReso5.TabIndex = 49;
+            this.presetReso5.SelectedIndexChanged += new System.EventHandler(this.presetReso5_SelectedIndexChanged);
             // 
             // presetDevice5
             // 
@@ -1710,6 +1717,7 @@
             this.presetReso6.Name = "presetReso6";
             this.presetReso6.Size = new System.Drawing.Size(121, 20);
             this.presetReso6.TabIndex = 73;
+            this.presetReso6.SelectedIndexChanged += new System.EventHandler(this.presetReso6_SelectedIndexChanged);
             // 
             // presetDevice6
             // 
@@ -2045,6 +2053,14 @@
             this.toolTip1.SetToolTip(this.textBoxPGaddress, "PostgreSQLのかどうしているサーバーIPアドレスを指定");
             this.textBoxPGaddress.Leave += new System.EventHandler(this.textBoxPGaddress_Leave);
             // 
+            // textBoxMaxFPS
+            // 
+            this.textBoxMaxFPS.Location = new System.Drawing.Point(479, 15);
+            this.textBoxMaxFPS.Name = "textBoxMaxFPS";
+            this.textBoxMaxFPS.Size = new System.Drawing.Size(33, 19);
+            this.textBoxMaxFPS.TabIndex = 45;
+            this.toolTip1.SetToolTip(this.textBoxMaxFPS, "プレビューや録画するフレームを間引きます。");
+            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(382, 17);
@@ -2225,11 +2241,22 @@
             this.label76.TabIndex = 41;
             this.label76.Text = "取込開始キー";
             // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(359, 18);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(117, 12);
+            this.label89.TabIndex = 46;
+            this.label89.Text = "上限FPS(0で制限なし)";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(676, 765);
+            this.Controls.Add(this.label89);
+            this.Controls.Add(this.textBoxMaxFPS);
             this.Controls.Add(this.label75);
             this.Controls.Add(this.textBoxChar2);
             this.Controls.Add(this.checkBoxShift2);
@@ -2488,5 +2515,7 @@
         private System.Windows.Forms.Label label86;
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.Label label88;
+        private System.Windows.Forms.TextBox textBoxMaxFPS;
+        private System.Windows.Forms.Label label89;
     }
 }

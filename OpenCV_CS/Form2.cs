@@ -49,9 +49,21 @@ namespace ENTcapture
                 this.textBox1.Text = Properties.Settings.Default.outdir;
                 this.textBox2.Text = Properties.Settings.Default.tmpdir;
                 this.comboCodecs.Items.Clear();
-                this.comboCodecs.Items.AddRange(new object[] { "raw", "MJPG", "XVID", "DIVX", "MP4V", "H264" });
-                int index = comboCodecs.Items.IndexOf(Properties.Settings.Default.codec);
+                this.comboCodecs.Items.AddRange(new object[] { "raw", "MJPG", "XVID", "DIVX", "mp4v", "H264" });
+
+                //Codec nameが変更
+                string orgCodec = Properties.Settings.Default.codec;
+                if (orgCodec == "MP4V")
+                {
+                    orgCodec = "mp4v";
+                    Properties.Settings.Default.codec = "mp4v";
+                    Properties.Settings.Default.Save();
+                }
+
+                int index = comboCodecs.Items.IndexOf(orgCodec);
                 comboCodecs.SelectedIndex = index;
+
+                textBoxMaxFPS.Text = Properties.Settings.Default.maxfps.ToString();
 
                 comboBoxReCodec.Items.Clear();
                 comboBoxReCodec.Items.Add("libxvid");
@@ -383,6 +395,7 @@ namespace ENTcapture
                     Properties.Settings.Default.timeout = (int)numericUpDownTimeout.Value;
 
                     Properties.Settings.Default.pgaddress = textBoxPGaddress.Text;
+                    Properties.Settings.Default.maxfps = int.Parse(textBoxMaxFPS.Text);
 
                     Properties.Settings.Default.Save();
                     this.DialogResult = DialogResult.OK;
@@ -771,9 +784,14 @@ namespace ENTcapture
                     i++;
                 } while (i < 127);
 
-                if (i > 0)
+                if (i > Properties.Settings.Default.reso1)
                 {
                     presetReso1.SelectedIndex = Properties.Settings.Default.reso1;
+                    PresetReady[1] = true;
+                }
+                else if (i > 0)
+                {
+                    presetReso1.SelectedIndex = 0; 
                     PresetReady[1] = true;
                 }
                 else
@@ -803,9 +821,14 @@ namespace ENTcapture
                     i++;
                 } while (i < 127);
 
-                if (i > 0)
+                if (i > Properties.Settings.Default.reso2)
                 {
                     presetReso2.SelectedIndex = Properties.Settings.Default.reso2;
+                    PresetReady[2] = true;
+                }
+                else if (i > 0)
+                {
+                    presetReso2.SelectedIndex = 0;
                     PresetReady[2] = true;
                 }
                 else
@@ -835,9 +858,14 @@ namespace ENTcapture
                     i++;
                 } while (i < 127);
 
-                if (i > 0)
+                if (i > Properties.Settings.Default.reso3)
                 {
-                    presetReso3.SelectedIndex = Properties.Settings.Default.reso3;
+                    presetReso3.SelectedIndex = Properties.Settings.Default.reso1;
+                    PresetReady[3] = true;
+                }
+                else if (i > 0)
+                {
+                    presetReso3.SelectedIndex = 0;
                     PresetReady[3] = true;
                 }
                 else
@@ -867,9 +895,14 @@ namespace ENTcapture
                     i++;
                 } while (i < 127);
 
-                if (i > 0)
+                if (i > Properties.Settings.Default.reso4)
                 {
                     presetReso4.SelectedIndex = Properties.Settings.Default.reso4;
+                    PresetReady[4] = true;
+                }
+                else if (i > 0)
+                {
+                    presetReso4.SelectedIndex = 0;
                     PresetReady[4] = true;
                 }
                 else
@@ -899,14 +932,19 @@ namespace ENTcapture
                     i++;
                 } while (i < 127);
 
-                if (i > 0)
+                if (i > Properties.Settings.Default.reso5)
                 {
                     presetReso5.SelectedIndex = Properties.Settings.Default.reso5;
                     PresetReady[5] = true;
                 }
+                else if (i > 0)
+                {
+                    presetReso5.SelectedIndex = 0;
+                    PresetReady[5] = true;
+                }
                 else
                 {
-                    MessageBox.Show("設定時に存在したデバイスが取り外されているようです。Preset5の設定はスキップされます。");
+                    MessageBox.Show("設定時に存在したデバイスが取り外されているようです。Preset6の設定はスキップされます。");
                 }
             }
             catch (Exception ex)
@@ -997,9 +1035,14 @@ namespace ENTcapture
                     i++;
                 } while (i < 127);
 
-                if (i > 0)
+                if (i > Properties.Settings.Default.reso6)
                 {
                     presetReso6.SelectedIndex = Properties.Settings.Default.reso6;
+                    PresetReady[6] = true;
+                }
+                else if (i > 0)
+                {
+                    presetReso6.SelectedIndex = 0;
                     PresetReady[6] = true;
                 }
                 else
@@ -1011,6 +1054,36 @@ namespace ENTcapture
             {
                 MessageBox.Show(ex.ToString() + "Preset6 デバイスエラー。設定時に存在したデバイスが取り外されている可能性があります");
             }
+        }
+
+        private void presetReso5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PresetReady[5] = true;
+        }
+
+        private void presetReso1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PresetReady[1] = true;
+        }
+
+        private void presetReso2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PresetReady[2] = true;
+        }
+
+        private void presetReso3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PresetReady[3] = true;
+        }
+
+        private void presetReso4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PresetReady[4] = true;
+        }
+
+        private void presetReso6_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PresetReady[6] = true;
         }
 
         private void textBoxChar2_KeyDown(object sender, KeyEventArgs e)

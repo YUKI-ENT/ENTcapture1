@@ -1,6 +1,4 @@
 ﻿using Accord;
-//using System.Threading;
-//using Point = System.Drawing.Point;
 using Accord.Imaging.Filters;
 using Accord.Video;
 using Accord.Video.DirectShow;
@@ -10,14 +8,17 @@ using OpenCvSharp.Extensions;
 ////using Brush = System.Drawing.Brush;
 using Shell32;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Timers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,6 +40,15 @@ namespace ENTcapture
         public FilterInfoCollection videoDevices;       // カメラデバイスの一覧
         private VideoCaptureDevice videoSource = null;   // カメラデバイスから取得した映像
         private VideoCapabilities[] videoCapabilities;
+
+        private bool CVcapture = false;   //true: Capture by OpenCV, false: by Accord
+        private bool CVrunning = false;
+        private Dictionary<int, VideoCapabilities[]> deviceCapabilities;
+        private VideoCapture capture;
+        private static ConcurrentQueue<Mat> frameQueue = new ConcurrentQueue<Mat>();
+        private static Mat previousFrame = null;
+        private static SHA256 sha256 = SHA256.Create();
+
         private string message;
         private int message_time = 5, t = 0;                              //Message 表示時間sec
         private int rec_start = 4, rec_count = 0; // rec_delay - rec_start間のfpsを測定
@@ -64,11 +74,20 @@ namespace ENTcapture
         private int[] filterGamma = new int[2] { 0, 10 }; //onoff, gamma*10 
         private int filterFlip = 10; //10:Off, 0:上下、1:左右、-1：上下左右
         private bool lockBmp = false;
+        private bool lockProcessBitmap = false;
+        private bool lockRecord = false, lockSnap = false;
         public bool lockOutbmp = false;
         private bool MouseUpFlag = false;
         private int TotalFrames = 0, SkippedFrames = 0;
+        private long elapsedMillis = 0, firstframeMillis = 0;
+        private long lastDrawTS = 0;
+        private int MaxFPS = 0;
+        private int PauseMS = 0; //フレームスキップms
+        Stopwatch StopwatchCapture = new Stopwatch();   
 
         public bool SnapFlag = false, PauseReloadFlag = false;
+
+        private bool SwapAsync = true;
 
         public string videofile;
 
@@ -77,13 +96,16 @@ namespace ENTcapture
         //private Accord.Video.FFMPEG.VideoFileWriter acout;
 
         private VideoWriter cvout = new VideoWriter();
-        private int cvoutfps = 0, presetFPS = 0;
+        private int  presetFPS = 0;
+        private double cvoutfps = 0;
+       
         //private Bitmap imgout;
         // ビットマップの配列を宣言
         private int BUFFERNUMBER = 4;
         private Bitmap[] bmpBuffer = new Bitmap[4];
         private int bufferIndex = 0;
         Stopwatch sw = new Stopwatch();
+        private System.Timers.Timer _timer;
 
         Form5 formDisp;
 
@@ -122,7 +144,12 @@ namespace ENTcapture
             keyboardHook.KeyDown += KeyboardHook_KeyDown;
             keyboardHook.KeyUp += KeyboardHook_KeyUp;
 
-            
+            //非同期タイマー
+            _timer = new System.Timers.Timer(1000); // 1秒ごとに処理
+            _timer.Elapsed += async (sender, e) => await TimerTickAsync();
+            _timer.AutoReset = true;
+            _timer.Start();
+
         }
 
         private async void button1_Click(object sender, EventArgs e) //再生
@@ -179,6 +206,9 @@ namespace ENTcapture
 
             playmode = 3; //再生中 0:stop,1:recstandby, 2:rec, 3:play, 4:pause
             trackBar1.Value = 0;
+
+            lockBmp = false;
+
             await playVideoAsync(videofile);
 
         }
@@ -283,7 +313,7 @@ namespace ENTcapture
                                 vcap.PosFrames = tr - 1;
                                 if (vcap.Read(m))
                                 {
-                                    if (lockBmp)
+                                    if (lockBmp || lockOutbmp)
                                     {
                                         message = string.Format("サーチ中フレームスキップしました");
                                         t = 0;
@@ -358,36 +388,85 @@ namespace ENTcapture
                 {
                     if (DeviceExist)
                     {
+                        //初期化
                         TotalFrames = 0;
                         SkippedFrames = 0;
+                        firstframeMillis = 0;
+                        lastDrawTS = 0;
+                        lockBmp = false;
+                        lockOutbmp = false;
+                        lockProcessBitmap = false;
+                        lockRecord = false;
+                        lockSnap = false;
 
+                        //MaxFPS>0ならばフレームスキップを設定する。presetFPSが設定されていれば、そちらをMaxFPSとする
+                        MaxFPS = Properties.Settings.Default.maxfps;
+                        if (presetFPS > 0) MaxFPS = presetFPS;
+                    
+                        PauseMS = 0;
+                        if (MaxFPS > 0)PauseMS = 1000 / MaxFPS;
+                        LogEvents("MaxFPS:" + MaxFPS.ToString() + "で取り込み開始します");
                         ctlLock(0);
 
                         drawStatus(1);
 
                         loadFilter(); //デバイスリストに存在すればここでフィルターがOnになる
 
-                        connectVideo();
-                        videoSource.VideoResolution = videoCapabilities[toolStripComboBoxResolution.SelectedIndex];
-
-                        LogEvents("[録画開始] Device:" + videoDevices[toolStripComboDevices.SelectedIndex].Name + "/" + toolStripComboBoxResolution.Text);
-
-                        videoSource.NewFrame += new NewFrameEventHandler(videoRendering);
-
-                        videoSource.Start();
-
-                        button2.Text = CaptureButtonOff;
-
-                        message = "取り込み中";
-                        if (checkBoxNorec.Checked)
+                        if (!CVcapture)
                         {
-                            message = "プレビュー中";
-                        }
+                            connectVideo();
+                            videoSource.VideoResolution = videoCapabilities[toolStripComboBoxResolution.SelectedIndex];
 
-                        t = 0;
-                        //timer1.Enabled = true;
-                        video_open = true;
-                        rec_count = 0;
+                            LogEvents("[録画開始] Device:" + videoDevices[toolStripComboDevices.SelectedIndex].Name + "/" + toolStripComboBoxResolution.Text);
+
+                            videoSource.NewFrame += new NewFrameEventHandler(videoRendering);
+
+                            videoSource.Start();
+                            StopwatchCapture.Reset();
+                            StopwatchCapture.Start();
+
+                            button2.Text = CaptureButtonOff;
+
+                            message = "取り込み中";
+                            if (checkBoxNorec.Checked)
+                            {
+                                message = "プレビュー中";
+                            }
+
+                            t = 0;
+                            //timer1.Enabled = true;
+                            video_open = true;
+                            rec_count = 0;
+                        } 
+                        else //OpenCV mode
+                        {
+                            int deviceIndex = toolStripComboDevices.SelectedIndex;
+                            //int deviceIndex = GetDeviceIdByMoniker(videoDevices[toolStripComboDevices.SelectedIndex].MonikerString);
+                            int resolutionIndex = toolStripComboBoxResolution.SelectedIndex;
+
+                            var selectedCapability = deviceCapabilities[deviceIndex][resolutionIndex];
+                            int cvwidth = selectedCapability.FrameSize.Width;
+                            int cvheight = selectedCapability.FrameSize.Height;
+                            int cvfps = selectedCapability.AverageFrameRate;
+
+                            LogEvents("[録画開始] OpenCV mode Device:" + videoDevices[toolStripComboDevices.SelectedIndex].Name + "/" + toolStripComboBoxResolution.Text);
+
+                            button2.Text = CaptureButtonOff;
+
+                            message = "取り込み中";
+                            if (checkBoxNorec.Checked)
+                            {
+                                message = "プレビュー中";
+                            }
+
+                            t = 0;
+                            //timer1.Enabled = true;
+                            video_open = true;
+                            rec_count = 0;
+
+                            StartVideoCapture(deviceIndex, cvwidth, cvheight, cvfps);
+
+                        }
                     }
                     else
                     {
@@ -401,63 +480,72 @@ namespace ENTcapture
                     t = 0;
                     button2.Text = CaptureButtonOn;
 
-                    if (videoSource.IsRunning)
+                    if (!CVcapture)
                     {
-                        drawStatus(0);
-                        ctlLock(9);
-
-                        //   timer1.Enabled = false;
-                        video_open = false;
-
-                        this.CloseVideoSource();
-                        if (rec_state)
+                        if (videoSource.IsRunning)
                         {
-                            cvout.Release();
-                            cvout.Dispose();
-                            //acout.Close();
-                            //acout.Dispose();
-                            rec_state = false;
+                            drawStatus(0);
+                            ctlLock(9);
 
-                            LogEvents("[録画終了] Drop frames:" + SkippedFrames.ToString() + "/Total frames:" + TotalFrames.ToString());
+                            //   timer1.Enabled = false;
+                            video_open = false;
 
-                            
-                            // 複数の非同期処理を同時に開始
-                            List<Task> tasks = new List<Task>();
-
-                            // 動画保存の場合は出力フォルダーにコピー
-                            if (this.checkBoxVideo.Checked)
+                            this.CloseVideoSource();
+                            if (rec_state)
                             {
-                                Task encodeTask = EncodeAndRSB(videofile);
-                                //await encodeTask;
-                                tasks.Add(encodeTask);
+                                cvout.Release();
+                                cvout.Dispose();
+                                //acout.Close();
+                                //acout.Dispose();
+                                rec_state = false;
+                                lockBmp = false;
+
+                                LogEvents("[録画終了] Drop frames:" + SkippedFrames.ToString() + "/Total frames:" + TotalFrames.ToString());
+
+
+                                // 複数の非同期処理を同時に開始
+                                List<Task> tasks = new List<Task>();
+
+                                // 動画保存の場合は出力フォルダーにコピー
+                                if (this.checkBoxVideo.Checked)
+                                {
+                                    Task encodeTask = EncodeAndRSB(videofile);
+                                    //await encodeTask;
+                                    tasks.Add(encodeTask);
+                                }
+                                else
+                                {
+                                    Task rsbTask = Rsb_reload();
+                                    //await rsbTask;
+                                    tasks.Add(rsbTask);
+                                }
+
+                                //録画したファイルを再生する
+                                playmode = 3; //再生中 0:stop,1:recstandby, 2:rec, 3:play, 4:pause
+                                trackBar1.Value = 0;
+
+                                this.Activate();
+                                this.BringToFront();
+
+                                ////フィルターを解除
+                                //checkBoxWB.Checked = false;
+
+                                Task playTask = playVideoAsync(videofile);
+                                tasks.Add(playTask);
+
+                                // すべてのタスクが完了するのを待つ
+                                await Task.WhenAll(tasks);
                             }
-                            else
+                            else //プレビューのみの場合
                             {
-                                Task rsbTask = Rsb_reload();
-                                //await rsbTask;
-                                tasks.Add(rsbTask);
+                                await Rsb_reload();
                             }
-                            
-                            //録画したファイルを再生する
-                            playmode = 3; //再生中 0:stop,1:recstandby, 2:rec, 3:play, 4:pause
-                            trackBar1.Value = 0;
-
-                            this.Activate();
-                            this.BringToFront();
-
-                            ////フィルターを解除
-                            //checkBoxWB.Checked = false;
-
-                            Task playTask = playVideoAsync(videofile);
-                            tasks.Add(playTask);
-
-                            // すべてのタスクが完了するのを待つ
-                            await Task.WhenAll(tasks);
                         }
-                        else //プレビューのみの場合
-                        {
-                            await Rsb_reload();
-                        }
+                    }
+                    else //CVcapture
+                    {
+                        CVrunning = false;
+
                     }
                 }
             }
@@ -475,7 +563,125 @@ namespace ENTcapture
 
                 this.CloseVideoSource();
             }
+        }
 
+        private async void StartVideoCapture(int deviceIndex, int width, int height, int fps)
+        {
+            if (capture != null && capture.IsOpened())
+            {
+                capture.Release();
+            }
+
+            // OpenCvSharpのVideoCaptureを作成
+            capture = new VideoCapture(deviceIndex,VideoCaptureAPIs.DSHOW);
+
+            if (!capture.IsOpened())
+            {
+                MessageBox.Show("Cannot open video device");
+                return;
+            }
+
+            // 解像度とフレームレートの設定
+            capture.Set(VideoCaptureProperties.FrameWidth, width);
+            capture.Set(VideoCaptureProperties.FrameHeight, height);
+            capture.Set(VideoCaptureProperties.Fps, fps);
+            TimeSpan frameInterval = TimeSpan.FromMilliseconds(1000.0 / fps);
+
+            // フレームを読み取るためのスレッドを開始
+            CVrunning = true;
+            Task.Run(() => CaptureLoop(TimeSpan.FromMilliseconds(1000.0 / 120)));
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            while (CVrunning)
+            {
+                if(stopwatch.Elapsed >= frameInterval)
+                {
+                    stopwatch.Restart();
+
+                    
+                    if (lockBmp || lockOutbmp)
+                    {
+                        SkippedFrames++;
+                        message = string.Format("取込中フレームスキップしました");
+                        t = 0;
+                        LogEvents(message + " Frame:" + TotalFrames.ToString());
+                    }
+                    else
+                    {
+                        lockBmp = true;
+
+                        if (frameQueue.TryDequeue(out Mat frame))
+                        {
+                            if (IsNewFrame(frame))
+                            {
+                                TotalFrames++;
+
+                                await ProcessBitmapAsync(frame.ToBitmap(), true);
+                                previousFrame?.Dispose();
+                                previousFrame = frame.Clone();
+                            }
+                            frame.Dispose();
+                        }
+                        else
+                        {
+                            Thread.Sleep(1); // キューが空の場合、少し待機
+                        }
+
+                        lockBmp = false;
+                    }
+
+                    labelFrames.Invoke((MethodInvoker)delegate
+                    {
+                        labelFrames.Text = "Drop:" + SkippedFrames.ToString() + "/" + TotalFrames.ToString();
+                    });
+                }
+            }
+
+            LogEvents("OpenCVキャプチャを終了します");
+
+            capture.Release();
+        }
+
+        private void CaptureLoop(TimeSpan frameInterval)
+        {
+            Stopwatch loopInterval = new Stopwatch();
+            loopInterval.Start();
+            while (CVrunning)
+            {
+                if (loopInterval.Elapsed >= frameInterval)
+                {
+                    loopInterval.Restart();
+
+                    Mat frame = new Mat();
+                    capture.Read(frame);
+                    if (!frame.Empty())
+                    {
+                        frameQueue.Enqueue(frame);
+                    }
+                }
+            }
+        }
+
+        private static bool IsNewFrame(Mat frame)
+        {
+            if (previousFrame == null)
+            {
+                return true;
+            }
+
+            string currentHash = ComputeHash(frame);
+            string previousHash = ComputeHash(previousFrame);
+
+            return !currentHash.Equals(previousHash);
+        }
+
+        private static string ComputeHash(Mat mat)
+        {
+            byte[] data = mat.ToBytes();
+            byte[] hash = sha256.ComputeHash(data);
+            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
         }
 
         private async Task playVideoAsync(string videoFile)
@@ -527,6 +733,8 @@ namespace ENTcapture
             {
                 // 端末で認識しているカメラデバイスの一覧を取得
                 videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                deviceCapabilities = new Dictionary<int, VideoCapabilities[]>();
+
                 toolStripComboDevices.Items.Clear();
 
                 if (videoDevices.Count == 0)
@@ -550,10 +758,14 @@ namespace ENTcapture
                         resos[i, j] = string.Format("{0}x{1}:{2}fps", c.FrameSize.Width, c.FrameSize.Height, c.AverageFrameRate);
                         j++;
                     }
+
+                    deviceCapabilities[i] = videoCapabilities;
+
                     videoSource = null;
                     i++;
                 }
                 toolStripComboDevices.SelectedIndex = 0;
+
             }
             catch (Exception ex)
             {
@@ -572,6 +784,22 @@ namespace ENTcapture
             videoCapabilities = videoSource.VideoCapabilities;
         }
 
+        //Accordのmonikerstring -> OpenCV device ID
+        private int GetDeviceIdByMoniker(string monikerString)
+        {
+            for (int i = 0; i < 10; i++) // 通常はシステムに10個以上のカメラデバイスはない
+            {
+                using (var cap = new VideoCapture(i,VideoCaptureAPIs.DSHOW))
+                {
+                    if (cap.IsOpened() && cap.GetBackendName().Contains(monikerString))
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
         // 描画処理
         private async void videoRendering(object sender, NewFrameEventArgs eventArgs)
         {
@@ -579,25 +807,47 @@ namespace ENTcapture
             //                                 |
             //                               [Snap]->[Rec]
             TotalFrames++;
+            if (firstframeMillis == 0) firstframeMillis = StopwatchCapture.ElapsedMilliseconds;
+
+            //Console.WriteLine("Elapsed time:" + (StopwatchCapture.ElapsedMilliseconds - lastDrawTS).ToString());
+
+            //一定時間経たないと描画フラグをリセットしない
+            if (!lockProcessBitmap && !lockSnap && StopwatchCapture.ElapsedMilliseconds - lastDrawTS >= PauseMS)
+            {
+                lockBmp = false;
+                //Console.WriteLine("ロック解除" + (StopwatchCapture.ElapsedMilliseconds - lastDrawTS).ToString());
+            }
+            else
+            {
+                if (lockProcessBitmap)
+                {
+                    Console.WriteLine("Skipped lockProcessBitmap is 1");
+                }
+                else
+                {
+                    Console.WriteLine("Skipped interval < " + PauseMS);
+                }
+            }
 
             if (lockBmp)
             {
                 SkippedFrames++;
                 message = string.Format("取込中フレームスキップしました");
                 t = 0;
-                LogEvents(message + " Frame:" + TotalFrames.ToString());
+                //LogEvents(message + " Frame:" + TotalFrames.ToString());
                 return;
             }
             else
             {
                 lockBmp = true;
+                lastDrawTS = StopwatchCapture.ElapsedMilliseconds;
 
+                lockProcessBitmap = true;
                 using (Bitmap ImgOriginal = (Bitmap)eventArgs.Frame.Clone())
                 {
                     await ProcessBitmapAsync(ImgOriginal, true);
                 }
-
-                lockBmp = false;
+                lockProcessBitmap = false;
             }
 
             labelFrames.Invoke((MethodInvoker)delegate
@@ -613,9 +863,16 @@ namespace ENTcapture
         {
             try
             {
-                // delay経過 fpsは取得できてるはず
-                if (rec_count >= rec_start && cvoutfps > 0 && rec_state == false)
+                if (lockRecord)
                 {
+                    LogEvents("録画フレームをスキップしました"+ TotalFrames.ToString());
+                }
+
+                // delay経過 fpsは取得できてるはず
+                if (!lockRecord && rec_count >= rec_start && cvoutfps > 0 && rec_state == false)
+                {
+                    lockRecord = true;
+
                     drawStatus(2);
 
                     Debug.WriteLine("Rec start. FPS is " + cvoutfps.ToString());
@@ -629,7 +886,7 @@ namespace ENTcapture
                     int fc;
 
                     if (s == "raw") fc = 0;
-                    else if (s[0] == 'M' || s[0] == 'H')
+                    else if (s[0] == 'M' || s[0] == 'H' || s[0] == 'm' || s[0] == 'h')
                     {
                         ex = ".mp4";
                         FourCC fourcc = VideoWriter.FourCC(s[0], s[1], s[2], s[3]);
@@ -654,8 +911,8 @@ namespace ENTcapture
 
                     Debug.WriteLine(string.Format("OpenCvSharp.Size:{0}x{1}, Codec:{2},file:{3}", vwidth, vheight, s, videofile));
 
-                    int fps = cvoutfps;
-                    if (presetFPS > 0) fps = presetFPS;
+                    double fps = cvoutfps;
+                    //if (presetFPS > 0) fps = presetFPS;
 
                     cvout = new VideoWriter(videofile, fc, fps, dsize);
                     Debug.WriteLine("cvout start.");
@@ -665,18 +922,19 @@ namespace ENTcapture
                     cvout.Set(VideoWriterProperties.Quality, 100);
                     message = string.Format("録画開始:file:{0}", videofile);
                     t = 0;
+
                 }
-                if (rec_state)
+                if (rec_state && !lockRecord)
                 {
+                    lockRecord = true;
+
                     await Task.Run(() =>
                     {
                         using (Mat m = bmp.ToMat())
                         {
                             cvout.Write(m);
-                            //m.Dispose();
                         }
                     });
-
                 }
             }
             catch (Exception e)
@@ -691,7 +949,7 @@ namespace ENTcapture
                 rec_state = false;
                 //bmp.Dispose();
             }
-
+            finally { lockRecord = false; }
         }
 
         //画像表示関数
@@ -699,6 +957,8 @@ namespace ENTcapture
         {
             try
             {
+                //Console.WriteLine(StopwatchCapture.ElapsedMilliseconds.ToString() + "ProcessBitmapAsync() is called");
+
                 if (MouseUpFlag) // フィルタ領域の設定完了→RBG平均を数値ボックスにセット
                 {
                     //Flip時座標変換
@@ -714,6 +974,7 @@ namespace ENTcapture
 
                 if (checkBoxWB.Checked)
                 {
+                    //Console.WriteLine("WB filter start");
                     await ApplyWBasync(bitmap, filterWB[1], filterWB[2], filterWB[3]);
 
                     if (filterGamma[1] != 10)
@@ -725,6 +986,8 @@ namespace ENTcapture
                     {
                         bitmap.RotateFlip(OpenCVFilterMode2RotationFlipType(filterFlip));
                     }
+                    //Console.WriteLine("WB filter end");
+
                 }
                 
 
@@ -736,14 +999,31 @@ namespace ENTcapture
                 {
                     Task SnapTask = SnapBmp(bitmap);
                     tasks.Add(SnapTask);
+                    //_ = Task.Run(async () =>
+                    //{
+                    //    try
+                    //    {
+                    //        await SnapBmp(bitmap);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        // エラーが発生した場合にログを記録
+                    //        LogError(ex);
+                    //    }
+                    //});
+
                     SnapFlag = false;
                 }
 
-                if (!lockOutbmp)
+                if (!lockOutbmp) //描画
                 {
+                    lockOutbmp = true;
+                    lastDrawTS = StopwatchCapture.ElapsedMilliseconds;
+
                     bmpBuffer[bufferIndex]?.Dispose();
                     bmpBuffer[bufferIndex] = (Bitmap)bitmap.Clone();
 
+                    //Console.WriteLine(StopwatchCapture.ElapsedMilliseconds.ToString() +  "Cloned to Buffer No: " + bufferIndex.ToString());
 
                     //MOUSE 領域指定
                     if (filterPain)
@@ -760,18 +1040,55 @@ namespace ENTcapture
                     //描画
                     if (!formDisp.Created || formDisp == null)
                     {
-                        Task DrawTask = Task.Run(() => SwapImage(pictureBox1, bmpBuffer[bufferIndex]));
-                        tasks.Add(DrawTask);
+                        if (SwapAsync)
+                        {
+                            // タスクをリストに追加して、awaitせずに非同期処理を開始
+                            Task drawTask = SwapImageAsync(pictureBox1, bmpBuffer[bufferIndex]);
+                            tasks.Add(drawTask);
+                        }
+                        else
+                        {
+                            Task DrawTask = Task.Run(() => SwapImage(pictureBox1, bmpBuffer[bufferIndex]));
+                            tasks.Add(DrawTask);
+                        }
+                        
+
+                        
                     }
                     else
                     {
-                        if(pictureBox1.Image != null)  SwapImage(pictureBox1, null);
-
-                        Task DrawForm5Task = Task.Run(() => formDisp.BeginInvoke(formDisp.dShowBmp, bmpBuffer[bufferIndex], vwidth, vheight));
+                        Task DrawForm5Task = Task.Run(() =>
+                            {
+                                try
+                                {
+                                    formDisp.BeginInvoke(formDisp.dShowBmp, bmpBuffer[bufferIndex], vwidth, vheight);
+                                } 
+                                catch(Exception ex) 
+                                {
+                                    LogError(ex);
+                                }
+                            }
+                        );
                         tasks.Add(DrawForm5Task);
+
+                        if (SwapAsync)
+                        {
+                            if (pictureBox1.Image != null) await SwapImageAsync(pictureBox1, null);
+                        }
+                        else
+                        {
+                            if (pictureBox1.Image != null) SwapImage(pictureBox1, null);
+                        }
                     }
-                   
+
+                    bufferIndex++;
+                    if (bufferIndex >= BUFFERNUMBER) bufferIndex = 0;
                     //bmpBuffer[bufferIndex]?.Dispose();
+                }
+                else 
+                {
+                    //Console.WriteLine(StopwatchCapture.ElapsedMilliseconds.ToString() + "Passed drawing bitmap");
+                    //if (StopwatchCapture.ElapsedMilliseconds -  lastDrawTS > 30) lockOutbmp = false;
                 }
 
                 //録画
@@ -784,8 +1101,9 @@ namespace ENTcapture
                 // すべてのタスクが完了するのを待つ
                 await Task.WhenAll(tasks);
 
-                bufferIndex++;
-                if (bufferIndex >= BUFFERNUMBER) bufferIndex = 0;
+                lockOutbmp = false;
+                //Console.WriteLine(StopwatchCapture.ElapsedMilliseconds.ToString() + "All tasks are finished");
+
             }
             catch (Exception e)
             {
@@ -841,7 +1159,9 @@ namespace ENTcapture
 
             loadFilter();
 
-            this.timer1.Enabled = true;
+            checkBoxSwapAsync.Checked = SwapAsync;
+
+            //this.timer1.Enabled = true;
 
             //古いログの削除
             DateTime cutoffDate = DateTime.Now.AddDays(-14);
@@ -936,6 +1256,12 @@ namespace ENTcapture
 
                 //filterlist
                 setFilterList(Properties.Settings.Default.filter);
+
+                //OpenCVmode
+                checkBoxOpenCVmode.Checked = CVcapture;
+
+                //maxFPS
+                MaxFPS = Properties.Settings.Default.maxfps;
 
 
                 drawStatus(0);
@@ -1037,7 +1363,8 @@ namespace ENTcapture
             {
                 playmode = 0;
 
-                await Task.Run(() => SwapImage(pictureBox1, null));
+                //await Task.Run(() => SwapImage(pictureBox1, null));
+                await SwapImageAsync(pictureBox1, null);
                 //if (this.pictureBox1.Image != null)
                 //{
                 //    this.pictureBox1.Image.Dispose();
@@ -1305,19 +1632,22 @@ namespace ENTcapture
 
         }
 
-
-        // フレームレートの取得
-        private void timer1_Tick_1(object sender, EventArgs e)
+        private async Task TimerTickAsync()
         {
+            //Console.WriteLine("Ticker elapsed:" + StopwatchCapture.ElapsedMilliseconds.ToString());
+
             if (video_open)
             {
-                int f = videoSource.FramesReceived;
+                double f;
+                long elapsedMillis = StopwatchCapture.ElapsedMilliseconds;
+                f = (double)(TotalFrames - SkippedFrames) * 1000 / (elapsedMillis - firstframeMillis);
+
                 rec_count++;
 
-                //最大録画時間超過
+                // 最大録画時間超過
                 if (rec_count > Properties.Settings.Default.timeout * 60 && !checkBoxNorec.Checked)
                 {
-                    this.button2.PerformClick();
+                    Invoke((Action)(() => button2.PerformClick()));
                 }
 
                 if (rec_count >= rec_start)
@@ -1325,32 +1655,98 @@ namespace ENTcapture
                     cvoutfps = f;
                 }
 
-                labelFPS.Text = f.ToString() + "fps";
-                labelTime.Text = rec_count.ToString() + "sec";
+                // UIの更新をUIスレッドで行う
+                Invoke((Action)(() =>
+                {
+                    labelFPS.Text = f.ToString("F1") + "fps";
+                    labelTime.Text = rec_count.ToString() + "sec";
+                }));
             }
-
 
             if (keydown)
             {
                 TimeSpan ts = sw.Elapsed;
-                labelMessage.Text += ts.TotalMilliseconds.ToString();
                 if (ts.TotalMilliseconds > 2000)
                 {
-                    //                  MessageBox.Show(ts.TotalMilliseconds.ToString());
-                    this.button2.PerformClick();
+                    Invoke((Action)(() => button2.PerformClick()));
                     sw.Stop();
                     sw.Reset();
                 }
+
+                // UIの更新をUIスレッドで行う
+                Invoke((Action)(() => labelMessage.Text += ts.TotalMilliseconds.ToString()));
             }
 
-            labelMessage.Text = message;
             t++;
             if (t > message_time)
             {
                 message = "";
             }
 
+            // メッセージの更新をUIスレッドで行う
+            Invoke((Action)(() => labelMessage.Text = message));
         }
+
+        // フレームレートの取得
+        //private void timer1_Tick_1(object sender, EventArgs e)
+        //{
+        //    Console.WriteLine("Ticker elapsed:" + StopwatchCapture.ElapsedMilliseconds.ToString());
+
+        //    if (video_open)
+        //    {
+        //        float f;
+
+        //        elapsedMillis = StopwatchCapture.ElapsedMilliseconds;
+        //        f = (float)(TotalFrames - SkippedFrames) * 1000 / elapsedMillis;
+                
+        //        //if (CVcapture)
+        //        //{
+        //        //    f = TotalFrames;
+        //        //}
+        //        //else
+        //        //{
+        //        //    f = videoSource.FramesReceived;
+        //        //}
+                
+        //        rec_count++;
+                
+        //        //最大録画時間超過
+        //        if (rec_count > Properties.Settings.Default.timeout * 60 && !checkBoxNorec.Checked)
+        //        {
+        //            this.button2.PerformClick();
+        //        }
+
+        //        if (rec_count >= rec_start)
+        //        {
+        //            cvoutfps = (int)f;
+        //        }
+
+        //        labelFPS.Text = f.ToString("F1") + "fps";
+        //        labelTime.Text = rec_count.ToString() + "sec";
+        //    }
+
+
+        //    if (keydown)
+        //    {
+        //        TimeSpan ts = sw.Elapsed;
+        //        labelMessage.Text += ts.TotalMilliseconds.ToString();
+        //        if (ts.TotalMilliseconds > 2000)
+        //        {
+        //            //                  MessageBox.Show(ts.TotalMilliseconds.ToString());
+        //            this.button2.PerformClick();
+        //            sw.Stop();
+        //            sw.Reset();
+        //        }
+        //    }
+
+        //    labelMessage.Text = message;
+        //    t++;
+        //    if (t > message_time)
+        //    {
+        //        message = "";
+        //    }
+
+        //}
 
         private void toolStripComboDevices_TextChanged(object sender, EventArgs e)
         {
@@ -1424,6 +1820,10 @@ namespace ENTcapture
         {
             try
             {
+                // フォームが閉じる際にタイマーを停止する
+                _timer.Stop();
+                _timer.Dispose();
+
                 this.CloseVideoSource();
                 deleteOldFiles(Properties.Settings.Default.autodelete, Properties.Settings.Default.tmpdir);
             }
@@ -1449,9 +1849,11 @@ namespace ENTcapture
         {
             string error_message = "";
 
-            lockBmp = true;
+            lockSnap = true;
+            Bitmap imgsnap = (Bitmap)bmp.Clone();
+            lockSnap = false;
 
-            using (Bitmap imgsnap = (Bitmap)bmp.Clone())
+            using (imgsnap)
             {
                 int w = imgsnap.Width;
                 int h = imgsnap.Height;
@@ -1500,7 +1902,7 @@ namespace ENTcapture
                         LogError(ex);
 
                         MessageBox.Show("Snapファイルの作成時にエラーが発生しました。もう一度静止画取得を試みてください。");
-                        lockBmp = false;
+                        //lockBmp = false;
                         return;
                     }
 
@@ -1571,13 +1973,14 @@ namespace ENTcapture
                         LogError(ex);
 
                         MessageBox.Show("画像切り出し、文字埋込みでエラーが発生しました: " + ex.ToString());
-                        lockBmp = false;
+                        //lockBmp = false;
                         return;
                     }
 
                     try
                     {
-                        await Task.Run(() => SaveImage(saveimg, snapFile, jpeg_quality));
+                        //await Task.Run(() => SaveImage(saveimg, snapFile, jpeg_quality));
+                        await SaveImageAsync(saveimg, snapFile, jpeg_quality);
                     }
                     catch (Exception ex)
                     {
@@ -1587,17 +1990,41 @@ namespace ENTcapture
                         LogError(ex);
 
                         MessageBox.Show("画像保存でエラーが発生しました");
-                        lockBmp = false;
+                        //lockBmp = false;
                         return;
                     }
 
                     try
                     {
-                        if (pictureBox6.Image != null) await Task.Run(() => SwapImage(pictureBox7, (Image)pictureBox6.Image.Clone()));
-                        if (pictureBox5.Image != null) await Task.Run(() => SwapImage(pictureBox6, (Image)pictureBox5.Image.Clone()));
-                        if (pictureBox4.Image != null) await Task.Run(() => SwapImage(pictureBox5, (Image)pictureBox4.Image.Clone()));
-                        if (pictureBox3.Image != null) await Task.Run(() => SwapImage(pictureBox4, (Image)pictureBox3.Image.Clone()));
-                        if (pictureBox2.Image != null) await Task.Run(() => SwapImage(pictureBox3, (Image)pictureBox2.Image.Clone()));
+                        if (SwapAsync)
+                        {
+                            // PictureBox7から順番に非同期でスワップを実行
+                            var tasks = new List<Task>
+                            {
+                                //SaveImageAsync(saveimg, snapFile, jpeg_quality),
+                                pictureBox6.Image != null ? SwapImageAsync(pictureBox7, (Image)pictureBox6.Image.Clone()) : Task.CompletedTask,
+                                pictureBox5.Image != null ? SwapImageAsync(pictureBox6, (Image)pictureBox5.Image.Clone()) : Task.CompletedTask,
+                                pictureBox4.Image != null ? SwapImageAsync(pictureBox5, (Image)pictureBox4.Image.Clone()) : Task.CompletedTask,
+                                pictureBox3.Image != null ? SwapImageAsync(pictureBox4, (Image)pictureBox3.Image.Clone()) : Task.CompletedTask,
+                                pictureBox2.Image != null ? SwapImageAsync(pictureBox3, (Image)pictureBox2.Image.Clone()) : Task.CompletedTask,
+                                SwapImageAsync(pictureBox2, (Image)saveimg.Clone())
+                            };
+
+                            // 全てのタスクが完了するのを待つ
+                            await Task.WhenAll(tasks);
+                        }
+                        else
+                        {
+                            if (pictureBox6.Image != null) await Task.Run(() => SwapImage(pictureBox7, (Image)pictureBox6.Image.Clone()));
+                            if (pictureBox5.Image != null) await Task.Run(() => SwapImage(pictureBox6, (Image)pictureBox5.Image.Clone()));
+                            if (pictureBox4.Image != null) await Task.Run(() => SwapImage(pictureBox5, (Image)pictureBox4.Image.Clone()));
+                            if (pictureBox3.Image != null) await Task.Run(() => SwapImage(pictureBox4, (Image)pictureBox3.Image.Clone()));
+                            if (pictureBox2.Image != null) await Task.Run(() => SwapImage(pictureBox3, (Image)pictureBox2.Image.Clone()));
+                            await Task.Run(() => SwapImageAsync(pictureBox2, (Image)saveimg.Clone()));
+                        }
+
+
+
                     }
                     catch (Exception ex)
                     {
@@ -1607,31 +2034,15 @@ namespace ENTcapture
                         LogError(ex);
 
                         MessageBox.Show("PictureboxのDispose処理でエラーが発生しました");
-                        lockBmp = false;
+                        //lockBmp = false;
                         return;
                     }
 
+                    
                     try
                     {
-                        await Task.Run(() => SwapImage(pictureBox2, (Image)saveimg.Clone()));
-                        //pictureBox2.Image = (Image)saveimg.Clone();
-                    }
-                    catch (Exception ex)
-                    {
-                        keydown = false;
-                        sw.Stop();
-
-                        LogError(ex);
-
-                        MessageBox.Show("Picturebox2の表示でエラーが発生しました");
-                        lockBmp = false;
-                        return;
-                    }
-
-                    try
-                    {
-                        saveimg.Dispose();
-                        imgsnap.Dispose();
+                        saveimg?.Dispose();
+                        imgsnap?.Dispose();
                     }
                     catch(Exception ex)
                     {
@@ -1641,7 +2052,7 @@ namespace ENTcapture
                         LogError(ex);
 
                         MessageBox.Show("最終のDispose処理でエラーが発生しました");
-                        lockBmp = false;
+                        //lockBmp = false;
                         return;
                     }
 
@@ -1653,7 +2064,7 @@ namespace ENTcapture
                     LogEvents("静止画キャプチャしました。ファイル名:" + snapFile);
                 }
             }
-            lockBmp = false;
+            lockSnap = false;
             
         }
 
@@ -1794,37 +2205,66 @@ namespace ENTcapture
         /// </summary>
         /// <param name="fileName">変換する画像ファイル名</param>
         /// <param name="quality">品質</param>
-        private void SaveImage(Bitmap bmp, string fileName, int quality)
+        //private void SaveImage(Bitmap bmp, string fileName, int quality)
+        //{
+        //    try
+        //    {
+        //        //EncoderParameterオブジェクトを1つ格納できる
+        //        //EncoderParametersクラスの新しいインスタンスを初期化
+        //        //ここでは品質のみ指定するため1つだけ用意する
+        //        System.Drawing.Imaging.EncoderParameters eps =
+        //            new System.Drawing.Imaging.EncoderParameters(1);
+        //        //品質を指定
+        //        System.Drawing.Imaging.EncoderParameter ep =
+        //            new System.Drawing.Imaging.EncoderParameter(
+        //            System.Drawing.Imaging.Encoder.Quality, (long)quality);
+        //        //EncoderParametersにセットする
+        //        eps.Param[0] = ep;
+
+        //        //イメージエンコーダに関する情報を取得する
+        //        System.Drawing.Imaging.ImageCodecInfo ici = GetEncoderInfo("image/jpeg");
+
+        //        //保存する
+        //        bmp.Save(fileName, ici, eps);
+
+        //        eps.Dispose();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogError(ex);
+
+        //        MessageBox.Show("Jpegファイルの保存に失敗しました");
+
+        //    }
+        //}
+
+        private async Task SaveImageAsync(Bitmap bmp, string fileName, int quality)
         {
-            try
+            await Task.Run(() =>
             {
-                //EncoderParameterオブジェクトを1つ格納できる
-                //EncoderParametersクラスの新しいインスタンスを初期化
-                //ここでは品質のみ指定するため1つだけ用意する
-                System.Drawing.Imaging.EncoderParameters eps =
-                    new System.Drawing.Imaging.EncoderParameters(1);
-                //品質を指定
-                System.Drawing.Imaging.EncoderParameter ep =
-                    new System.Drawing.Imaging.EncoderParameter(
-                    System.Drawing.Imaging.Encoder.Quality, (long)quality);
-                //EncoderParametersにセットする
-                eps.Param[0] = ep;
+                try
+                {
+                    // EncoderParameterオブジェクトを1つ格納できるEncoderParametersクラスの新しいインスタンスを初期化
+                    using (System.Drawing.Imaging.EncoderParameters eps = new System.Drawing.Imaging.EncoderParameters(1))
+                    {
+                        // 品質を指定
+                        System.Drawing.Imaging.EncoderParameter ep = new System.Drawing.Imaging.EncoderParameter(
+                            System.Drawing.Imaging.Encoder.Quality, (long)quality);
+                        eps.Param[0] = ep;
 
-                //イメージエンコーダに関する情報を取得する
-                System.Drawing.Imaging.ImageCodecInfo ici = GetEncoderInfo("image/jpeg");
+                        // イメージエンコーダに関する情報を取得する
+                        System.Drawing.Imaging.ImageCodecInfo ici = GetEncoderInfo("image/jpeg");
 
-                //保存する
-                bmp.Save(fileName, ici, eps);
-
-                eps.Dispose();
-            }
-            catch (Exception ex)
-            {
-                LogError(ex);
-
-                MessageBox.Show("Jpegファイルの保存に失敗しました");
-
-            }
+                        // 保存する
+                        bmp.Save(fileName, ici, eps);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex);
+                    MessageBox.Show("Jpegファイルの保存に失敗しました");
+                }
+            });
         }
 
         //MimeTypeで指定されたImageCodecInfoを探して返す
@@ -2547,6 +2987,17 @@ namespace ENTcapture
             filterWB[2] = (int)numericUpDownG.Value;
         }
 
+        private void checkBoxOpenCVmode_CheckedChanged(object sender, EventArgs e)
+        {
+            CVcapture = checkBoxOpenCVmode.Checked;
+        }
+
+        private void checkBoxSwapAsync_CheckedChanged(object sender, EventArgs e)
+        {
+            SwapAsync = checkBoxSwapAsync.Checked;
+            LogEvents("非同期描画モード" + SwapAsync.ToString());
+        }
+
         private void numericUpDownB_ValueChanged(object sender, EventArgs e)
         {
             filterWB[3] = (int)numericUpDownB.Value;
@@ -2890,13 +3341,47 @@ namespace ENTcapture
             try
             {
                 var oldImg = pictureBox.Image;
-                pictureBox.Image = newImage;
-                oldImg?.Dispose();
+                if (!ImageAnimator.CanAnimate(newImage))
+                {
+                    pictureBox.Image = newImage;
+                    oldImg?.Dispose();
+                }
             } 
             catch (Exception ex)
             {
                 LogError(ex);
                 //MessageBox.Show(ex.ToString());
+                message = "描画中にエラーが発生しました";
+                t = 0;
+            }
+        }
+
+        private async Task SwapImageAsync(PictureBox pictureBox, Image newImage)
+        {
+            if (pictureBox == null)
+            {
+                throw new ArgumentNullException(nameof(pictureBox));
+            }
+            try
+            {
+                var oldImg = pictureBox.Image;
+
+                if (!ImageAnimator.CanAnimate(newImage))
+                {
+                    pictureBox.BeginInvoke((Action)(() =>
+                    {
+                        pictureBox.Image = newImage;
+                        oldImg?.Dispose();
+
+                    }));
+                }
+                
+                // メモリ解放のチェック
+                await Task.Delay(1);  // 必要に応じて間隔を調整
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
                 message = "描画中にエラーが発生しました";
                 t = 0;
             }
