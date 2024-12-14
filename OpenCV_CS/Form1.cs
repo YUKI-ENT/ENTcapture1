@@ -905,7 +905,7 @@ namespace ENTcapture
 
                     for (int i = 1; i < 100; i++)
                     {
-                        videofile = v.Replace("%%%%", i.ToString("D2"));
+                        videofile = v.Replace("%%%%", i.ToString("D4"));
                         if (!File.Exists(videofile)) break;
                     }
 
@@ -1890,7 +1890,7 @@ namespace ENTcapture
 
                         for (int i = 1; i < 100; i++)
                         {
-                            snapFile = f.Replace("%%%%", i.ToString("D2"));
+                            snapFile = f.Replace("%%%%", i.ToString("D4"));
                             if (!File.Exists(snapFile)) break;
                         }
                     }
