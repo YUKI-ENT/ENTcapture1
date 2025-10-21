@@ -57,6 +57,7 @@ namespace ENTcapture
         public Keys snapkey, startkey;
         private int vwidth, vheight;
         private byte playmode = 0, mode = 0;
+        private int currentVideoFileNumber = 1, currentPictureFileNumber = 1;
         private int videoPosition = 0;
         private string testname = "";  //Videorecordスレッドからcomboboxtestが参照できないので
         private int[] rois = new int[4]; //x1,y1,x2,y2
@@ -116,6 +117,9 @@ namespace ENTcapture
 
         //Log
         private string LogFile;
+
+        //theptの更新対策20251016
+        private string _lastTheptLine = null;
 
         static Semaphore semaphore = new Semaphore(2, 2); // 初期化時に2つのスロットを持つ Semaphore オブジェクトを作成します
 
@@ -180,6 +184,8 @@ namespace ENTcapture
             {
                 playmode = 0; // 再生終了
                 //this.button3.Text = "再生";
+                button3.Image = Properties.Resources.Play;
+
                 drawBar(0, 0, Brushes.Gray);
 
                 ctlLock(9);
@@ -206,6 +212,8 @@ namespace ENTcapture
 
             playmode = 3; //再生中 0:stop,1:recstandby, 2:rec, 3:play, 4:pause
             trackBar1.Value = 0;
+
+            button3.Image = Properties.Resources.Pause;
 
             lockBmp = false;
 
@@ -291,6 +299,7 @@ namespace ENTcapture
                                 playmode = 4;
                                 drawStatus(4);
                                 //this.button3.Text = "再開";
+                                button3.Image = Properties.Resources.Play;
                                 vcap.PosFrames = total_frames - 1;
                             }
 
@@ -530,6 +539,8 @@ namespace ENTcapture
                                 ////フィルターを解除
                                 //checkBoxWB.Checked = false;
 
+                                button3.Image = Properties.Resources.Pause;
+
                                 Task playTask = playVideoAsync(videofile);
                                 tasks.Add(playTask);
 
@@ -696,6 +707,8 @@ namespace ENTcapture
 
             playmode = 0; // 再生終了
             //this.button3.Text = "再生";
+            button3.Image = Properties.Resources.Play;
+
             drawBar(0, 0, Brushes.Gray);
 
             ctlLock(9);
@@ -903,11 +916,13 @@ namespace ENTcapture
 
                     v += PtID + "~%%%%~" + DateTime.Now.ToString("yyyy_MM_dd") + "~" + testname + "~RSB" + ex;
 
-                    for (int i = 1; i < 100; i++)
+                    for (int i = currentVideoFileNumber; i < 10000; i++)
                     {
                         videofile = v.Replace("%%%%", i.ToString("D4"));
+                        currentVideoFileNumber = i;
                         if (!File.Exists(videofile)) break;
                     }
+                    
 
                     Debug.WriteLine(string.Format("OpenCvSharp.Size:{0}x{1}, Codec:{2},file:{3}", vwidth, vheight, s, videofile));
 
@@ -1391,20 +1406,15 @@ namespace ENTcapture
                 try
                 {
                     //MessageBox.Show("Thept changed!");
-                    getThept();
-                    // this.comboBoxID.Text = PtID;
-                    // this.comboBoxName.Text = PtName;
-                    this.comboBoxID.Text = PtID;
-                    this.comboBoxName.Text = PtName;
-
-                    //動画ロード中であれば停止しておく
-                    this.button4.PerformClick();
-                    successRead = true;
-                    break;
+                    if (getThept())
+                    {
+                        successRead = true;
+                        break;
+                    }
                 }
                 catch (Exception)
                 {
-                    Thread.Sleep(100);
+                    Thread.Sleep(200);
                 }
             }
 
@@ -1553,46 +1563,98 @@ namespace ENTcapture
 
         }
 
-        private void getThept()
+        private bool getThept() // 更新あればtrue
         {
-            string text = "";
-            string ptfile = Properties.Settings.Default.thept + "\\thept.txt";
+            const int ReadRetry = 10;
+            const int ReadDelayMs = 120;
 
-            if (File.Exists(ptfile))
-            {
-                using (StreamReader sr = new StreamReader(ptfile, Encoding.GetEncoding("Shift_JIS")))
-                {
-                    try
-                    {
-                        text = sr.ReadLine();
-                        PtID = text.Split(',')[1];
-                        PtName = text.Split(',')[2].Replace("\"", "");
-                        dicPtHisory[PtID] = PtName;
-
-                        if (comboBoxID.Items.IndexOf(PtID) < 0)
-                        {
-                            comboBoxID.Items.Add(PtID);
-                            comboBoxName.Items.Add(PtName);
-                        }
-                    }
-                    catch
-                    {
-                        PtID = "";
-                        PtName = "";
-                        message = "thept.txtを読み込めませんでした";
-                        t = 0;
-                    }
-                }
-                Debug.WriteLine(PtID, PtName);
-
-            }
-            else
+            string ptfile = System.IO.Path.Combine(Properties.Settings.Default.thept, "thept.txt");
+            if (!File.Exists(ptfile))
             {
                 message = "thept.txtが見つかりません";
                 t = 0;
                 PtID = "";
                 PtName = "";
+                return false;
             }
+
+            string line = null;
+
+            // 書き込み中の競合を避けつつ1行読みにチャレンジ
+            for (int i = 0; i < ReadRetry; i++)
+            {
+                try
+                {
+                    using (var fs = new FileStream(ptfile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var sr = new StreamReader(fs, Encoding.GetEncoding(932), detectEncodingFromByteOrderMarks: false))
+                    {
+                        line = sr.ReadLine();
+                    }
+                    break; // 読めた
+                }
+                catch (IOException)
+                {
+                    System.Threading.Thread.Sleep(ReadDelayMs);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    System.Threading.Thread.Sleep(ReadDelayMs);
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                // 空行や読めなかった場合はスキップ
+                message = "thept.txtを読み込めませんでした（空/ロック中）";
+                t = 0;
+                return false;
+            }
+
+            // まったく同一内容（同一テキスト）ならスキップ
+            if (string.Equals(line, _lastTheptLine, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            // ここからパース（例: CSVっぽい "...,ID,Name,...")
+            try
+            {
+                // 最低3列想定： [0]=何か, [1]=PtID, [2]=PtName
+                var parts = line.Split(',');
+                if (parts.Length < 3) throw new FormatException("列数不足");
+
+                string newPtId = parts[1]?.Trim();
+                string newPtName = parts[2]?.Replace("\"", "").Trim();
+
+                if (string.IsNullOrEmpty(newPtId))
+                    throw new FormatException("IDが空");
+
+                // ここまで来たら確定反映（途中失敗で既存状態を壊さない）
+                _lastTheptLine = line;
+                PtID = newPtId;
+                PtName = newPtName;
+
+                // 履歴/コンボ更新（重複チェック）
+                dicPtHisory[PtID] = PtName;
+                if (comboBoxID.Items.IndexOf(PtID) < 0)
+                {
+                    comboBoxID.Items.Add(PtID);
+                    comboBoxName.Items.Add(PtName);
+                    comboBoxID.Text = PtID;
+                    comboBoxName.Text = PtName;
+                    button4.PerformClick(); 
+                }
+
+                return true; // 「内容が変わった」
+            }
+            catch (Exception ex)
+            {
+                // パース失敗時は状態を壊さず通知のみ
+                message = "thept.txtの解析に失敗: " + ex.Message;
+                t = 0;
+                return false;
+            }
+           
         }
 
        
@@ -1610,11 +1672,13 @@ namespace ENTcapture
                         playmode = 4;
                         drawStatus(4);
                         //this.button3.Text = "再開";
+                        button3.Image = Properties.Resources.Play;
                         break;
                     case 4: //一時停止中
                         playmode = 3;
                         drawStatus(3);
                         //this.button3.Text = "一時停止";
+                        button3.Image = Properties.Resources.Pause;
                         break;
                 }
             }
@@ -1627,6 +1691,7 @@ namespace ENTcapture
             {
                 playmode = 4;
                 drawStatus(4);
+                button3.Image = Properties.Resources.Play;
                 //this.button3.Text = "再開";
             }
 
@@ -1888,9 +1953,10 @@ namespace ENTcapture
                         string f = Properties.Settings.Default.outdir + "\\" + id + "~%%%%~" + dt.ToString("yyyy_MM_dd") + "~" + test + "~RSB.jpg";
 
 
-                        for (int i = 1; i < 100; i++)
+                        for (int i = currentPictureFileNumber; i < 10000; i++)
                         {
                             snapFile = f.Replace("%%%%", i.ToString("D4"));
+                            currentPictureFileNumber = i;
                             if (!File.Exists(snapFile)) break;
                         }
                     }
@@ -2673,6 +2739,10 @@ namespace ENTcapture
 
             PtID = comboBoxID.Text;
             PtName = comboBoxName.Text;
+
+            //ファイル連番をクリア
+            currentPictureFileNumber = 1;
+            currentVideoFileNumber = 1;
         }
 
         private string getNameFromPG(string id)

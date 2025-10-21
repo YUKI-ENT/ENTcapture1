@@ -2562,7 +2562,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ENTcapture, Version=1.24.11.8, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:ENTcapture, Version=1.25.10.21, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_FE0C642F2E354DEBAB2A5611EB8DBADF"
@@ -2698,15 +2698,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ENTcapture"
-        "ProductCode" = "8:{D329F8AC-2F68-4F56-AC26-5FEA9DCD4C7D}"
-        "PackageCode" = "8:{26BF294C-8AD1-4FDE-ADBF-99B16B3BDEF3}"
+        "ProductCode" = "8:{2987B7FE-3D6E-48E0-B0C0-A8F8AB1423B2}"
+        "PackageCode" = "8:{824AB638-EC2A-49DB-9668-AB3B9597FE0D}"
         "UpgradeCode" = "8:{6662B1F6-82D4-495B-8AA6-6FFC065F1929}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.24.1214"
+        "ProductVersion" = "8:1.25.1021"
         "Manufacturer" = "8:YUKI ENT clinic"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

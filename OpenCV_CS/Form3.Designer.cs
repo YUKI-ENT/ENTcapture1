@@ -69,10 +69,10 @@
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(95, 67);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(262, 12);
+            this.linkLabel1.Size = new System.Drawing.Size(230, 12);
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "https://yuuki-jibika.com/software/entcapture.html";
+            this.linkLabel1.Text = "https://github.com/YUKI-ENT/ENTcapture1";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // labelVersionNo
