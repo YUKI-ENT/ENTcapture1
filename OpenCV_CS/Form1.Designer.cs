@@ -47,8 +47,12 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboDevices = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripComboBoxResolution = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripReloadButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripOpenLogFile = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonVersion = new System.Windows.Forms.ToolStripButton();
             this.checkBoxVideo = new System.Windows.Forms.CheckBox();
             this.buttonFFmpeg = new System.Windows.Forms.Button();
             this.buttonStart = new System.Windows.Forms.Button();
@@ -81,29 +85,25 @@
             this.checkBoxNorec = new System.Windows.Forms.CheckBox();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.comboBoxID = new System.Windows.Forms.ComboBox();
-            this.comboBoxName = new System.Windows.Forms.ComboBox();
-            this.labelFrames = new System.Windows.Forms.Label();
-            this.checkBoxOpenCVmode = new System.Windows.Forms.CheckBox();
-            this.checkBoxSwapAsync = new System.Windows.Forms.CheckBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.toolStripReloadButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
-            this.toolStripOpenLogFile = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonVersion = new System.Windows.Forms.ToolStripButton();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.pictureBoxState = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.buttonSnap = new System.Windows.Forms.Button();
-            this.buttonExit = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.comboBoxID = new System.Windows.Forms.ComboBox();
+            this.comboBoxName = new System.Windows.Forms.ComboBox();
+            this.labelFrames = new System.Windows.Forms.Label();
+            this.checkBoxOpenCVmode = new System.Windows.Forms.CheckBox();
+            this.checkBoxSwapAsync = new System.Windows.Forms.CheckBox();
+            this.pictureBoxState = new System.Windows.Forms.PictureBox();
+            this.buttonExit = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBoxBar = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
@@ -115,12 +115,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarGamma)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBar)).BeginInit();
             this.SuspendLayout();
@@ -220,7 +220,7 @@
             // 
             this.radioButton1.Appearance = System.Windows.Forms.Appearance.Button;
             this.radioButton1.Checked = true;
-            this.radioButton1.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioButton1.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton1.Location = new System.Drawing.Point(12, 30);
             this.radioButton1.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton1.Name = "radioButton1";
@@ -236,7 +236,7 @@
             // radioButton2
             // 
             this.radioButton2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton2.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioButton2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton2.Location = new System.Drawing.Point(92, 30);
             this.radioButton2.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton2.Name = "radioButton2";
@@ -251,7 +251,7 @@
             // radioButton3
             // 
             this.radioButton3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton3.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioButton3.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton3.Location = new System.Drawing.Point(172, 30);
             this.radioButton3.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton3.Name = "radioButton3";
@@ -266,7 +266,7 @@
             // radioButton4
             // 
             this.radioButton4.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton4.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioButton4.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton4.Location = new System.Drawing.Point(252, 30);
             this.radioButton4.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton4.Name = "radioButton4";
@@ -314,22 +314,64 @@
             this.toolStripComboBoxResolution.ToolTipText = "解像度一覧";
             this.toolStripComboBoxResolution.TextChanged += new System.EventHandler(this.toolStripComboBoxResolution_TextChanged);
             // 
+            // toolStripReloadButton
+            // 
+            this.toolStripReloadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripReloadButton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripReloadButton.Image")));
+            this.toolStripReloadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripReloadButton.Name = "toolStripReloadButton";
+            this.toolStripReloadButton.Size = new System.Drawing.Size(23, 22);
+            this.toolStripReloadButton.Text = "ビデオデバイスを再スキャンします";
+            this.toolStripReloadButton.Click += new System.EventHandler(this.toolStripReloadButton_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonSettings
+            // 
+            this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
+            this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSettings.Name = "toolStripButtonSettings";
+            this.toolStripButtonSettings.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonSettings.Text = "設定";
+            this.toolStripButtonSettings.Click += new System.EventHandler(this.toolStripButtonSettings_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripOpenLogFile
+            // 
+            this.toolStripOpenLogFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripOpenLogFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenLogFile.Image")));
+            this.toolStripOpenLogFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripOpenLogFile.Name = "toolStripOpenLogFile";
+            this.toolStripOpenLogFile.Size = new System.Drawing.Size(23, 22);
+            this.toolStripOpenLogFile.Text = "toolStripButton1";
+            this.toolStripOpenLogFile.ToolTipText = "logファイルを開く";
+            this.toolStripOpenLogFile.Click += new System.EventHandler(this.toolStripOpenLogFile_Click);
+            // 
+            // toolStripButtonVersion
+            // 
+            this.toolStripButtonVersion.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonVersion.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonVersion.Image")));
+            this.toolStripButtonVersion.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonVersion.Name = "toolStripButtonVersion";
+            this.toolStripButtonVersion.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonVersion.Text = "Version";
+            this.toolStripButtonVersion.Click += new System.EventHandler(this.toolStripButtonVersion_Click);
+            // 
             // checkBoxVideo
             // 
             this.checkBoxVideo.AutoSize = true;
-            this.checkBoxVideo.Location = new System.Drawing.Point(307, 90);
+            this.checkBoxVideo.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.checkBoxVideo.Location = new System.Drawing.Point(303, 90);
             this.checkBoxVideo.Name = "checkBoxVideo";
-            this.checkBoxVideo.Size = new System.Drawing.Size(106, 16);
+            this.checkBoxVideo.Size = new System.Drawing.Size(109, 19);
             this.checkBoxVideo.TabIndex = 39;
             this.checkBoxVideo.Text = "動画をファイリング";
             this.toolTip1.SetToolTip(this.checkBoxVideo, "取り込んだ動画ファイルを出力フォルダーに出力します。");
@@ -658,9 +700,10 @@
             // checkBoxNorec
             // 
             this.checkBoxNorec.AutoSize = true;
-            this.checkBoxNorec.Location = new System.Drawing.Point(208, 90);
+            this.checkBoxNorec.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.checkBoxNorec.Location = new System.Drawing.Point(203, 90);
             this.checkBoxNorec.Name = "checkBoxNorec";
-            this.checkBoxNorec.Size = new System.Drawing.Size(89, 16);
+            this.checkBoxNorec.Size = new System.Drawing.Size(88, 19);
             this.checkBoxNorec.TabIndex = 46;
             this.checkBoxNorec.Text = "プレビューのみ";
             this.toolTip1.SetToolTip(this.checkBoxNorec, "「取込開始」したとき、一時録画ファイルを作らずプレビュー画面のみを表示します。\r\nこれをチェックした場合、記録の再生や動画のファイリングはできません。\r\n");
@@ -670,7 +713,7 @@
             // radioButton5
             // 
             this.radioButton5.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton5.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioButton5.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton5.Location = new System.Drawing.Point(332, 30);
             this.radioButton5.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton5.Name = "radioButton5";
@@ -685,7 +728,7 @@
             // radioButton6
             // 
             this.radioButton6.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton6.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioButton6.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton6.Location = new System.Drawing.Point(412, 30);
             this.radioButton6.Margin = new System.Windows.Forms.Padding(0);
             this.radioButton6.Name = "radioButton6";
@@ -696,6 +739,151 @@
             this.toolTip1.SetToolTip(this.radioButton6, "プリセットボタン：「設定」で名称やビデオデバイス名を設定します");
             this.radioButton6.UseVisualStyleBackColor = true;
             this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton6_CheckedChanged);
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox7.Location = new System.Drawing.Point(629, 694);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(120, 80);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox7.TabIndex = 43;
+            this.pictureBox7.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox7, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
+            this.pictureBox7.DoubleClick += new System.EventHandler(this.pictureBox7_DoubleClick);
+            // 
+            // button4
+            // 
+            this.button4.Image = global::ENTcapture.Properties.Resources.Stop;
+            this.button4.Location = new System.Drawing.Point(344, 183);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(53, 28);
+            this.button4.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.button4, "再生終了");
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button3
+            // 
+            this.button3.Image = global::ENTcapture.Properties.Resources.Play;
+            this.button3.Location = new System.Drawing.Point(403, 183);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(53, 28);
+            this.button3.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.button3, "再生/一時停止");
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox6.Location = new System.Drawing.Point(509, 694);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(120, 80);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 15;
+            this.pictureBox6.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox6, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
+            this.pictureBox6.DoubleClick += new System.EventHandler(this.pictureBox6_DoubleClick);
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox5.Location = new System.Drawing.Point(389, 694);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(120, 80);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 14;
+            this.pictureBox5.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox5, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
+            this.pictureBox5.DoubleClick += new System.EventHandler(this.pictureBox5_DoubleClick);
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox4.Location = new System.Drawing.Point(269, 694);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(120, 80);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 13;
+            this.pictureBox4.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox4, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
+            this.pictureBox4.DoubleClick += new System.EventHandler(this.pictureBox4_DoubleClick);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox3.Location = new System.Drawing.Point(149, 694);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(120, 80);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 12;
+            this.pictureBox3.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox3, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
+            this.pictureBox3.DoubleClick += new System.EventHandler(this.pictureBox3_DoubleClick);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox2.Location = new System.Drawing.Point(29, 694);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(120, 80);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 11;
+            this.pictureBox2.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox2, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
+            this.pictureBox2.DoubleClick += new System.EventHandler(this.pictureBox2_DoubleClick);
+            // 
+            // buttonSnap
+            // 
+            this.buttonSnap.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.buttonSnap.Image = ((System.Drawing.Image)(resources.GetObject("buttonSnap.Image")));
+            this.buttonSnap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonSnap.Location = new System.Drawing.Point(515, 67);
+            this.buttonSnap.Name = "buttonSnap";
+            this.buttonSnap.Padding = new System.Windows.Forms.Padding(3);
+            this.buttonSnap.Size = new System.Drawing.Size(110, 36);
+            this.buttonSnap.TabIndex = 6;
+            this.buttonSnap.Text = "静止画";
+            this.toolTip1.SetToolTip(this.buttonSnap, "ビデオキャプチャ、動画再生時、静止画をSnapします");
+            this.buttonSnap.UseVisualStyleBackColor = true;
+            this.buttonSnap.Click += new System.EventHandler(this.buttonSnap_Click);
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(515, 30);
+            this.button2.Name = "button2";
+            this.button2.Padding = new System.Windows.Forms.Padding(3);
+            this.button2.Size = new System.Drawing.Size(110, 36);
+            this.button2.TabIndex = 3;
+            this.button2.Text = "開始";
+            this.toolTip1.SetToolTip(this.button2, "キャプチャを開始します");
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(628, 30);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(3);
+            this.button1.Size = new System.Drawing.Size(110, 36);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "動画再生";
+            this.toolTip1.SetToolTip(this.button1, "録画したファイルを開きます");
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // comboBoxID
             // 
@@ -759,82 +947,6 @@
             this.checkBoxSwapAsync.UseVisualStyleBackColor = true;
             this.checkBoxSwapAsync.CheckedChanged += new System.EventHandler(this.checkBoxSwapAsync_CheckedChanged);
             // 
-            // pictureBox7
-            // 
-            this.pictureBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox7.Location = new System.Drawing.Point(628, 694);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(120, 80);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 43;
-            this.pictureBox7.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox7, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
-            this.pictureBox7.DoubleClick += new System.EventHandler(this.pictureBox7_DoubleClick);
-            // 
-            // toolStripReloadButton
-            // 
-            this.toolStripReloadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripReloadButton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripReloadButton.Image")));
-            this.toolStripReloadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripReloadButton.Name = "toolStripReloadButton";
-            this.toolStripReloadButton.Size = new System.Drawing.Size(23, 22);
-            this.toolStripReloadButton.Text = "ビデオデバイスを再スキャンします";
-            this.toolStripReloadButton.Click += new System.EventHandler(this.toolStripReloadButton_Click);
-            // 
-            // toolStripButtonSettings
-            // 
-            this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
-            this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSettings.Name = "toolStripButtonSettings";
-            this.toolStripButtonSettings.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonSettings.Text = "設定";
-            this.toolStripButtonSettings.Click += new System.EventHandler(this.toolStripButtonSettings_Click);
-            // 
-            // toolStripOpenLogFile
-            // 
-            this.toolStripOpenLogFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripOpenLogFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenLogFile.Image")));
-            this.toolStripOpenLogFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripOpenLogFile.Name = "toolStripOpenLogFile";
-            this.toolStripOpenLogFile.Size = new System.Drawing.Size(23, 22);
-            this.toolStripOpenLogFile.Text = "toolStripButton1";
-            this.toolStripOpenLogFile.ToolTipText = "logファイルを開く";
-            this.toolStripOpenLogFile.Click += new System.EventHandler(this.toolStripOpenLogFile_Click);
-            // 
-            // toolStripButtonVersion
-            // 
-            this.toolStripButtonVersion.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonVersion.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonVersion.Image")));
-            this.toolStripButtonVersion.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonVersion.Name = "toolStripButtonVersion";
-            this.toolStripButtonVersion.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonVersion.Text = "Version";
-            this.toolStripButtonVersion.Click += new System.EventHandler(this.toolStripButtonVersion_Click);
-            // 
-            // button4
-            // 
-            this.button4.Image = global::ENTcapture.Properties.Resources.Stop;
-            this.button4.Location = new System.Drawing.Point(344, 183);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(53, 28);
-            this.button4.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.button4, "再生終了");
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button3
-            // 
-            this.button3.Image = global::ENTcapture.Properties.Resources.Play;
-            this.button3.Location = new System.Drawing.Point(403, 183);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(53, 28);
-            this.button3.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.button3, "再生/一時停止");
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // pictureBoxState
             // 
             this.pictureBoxState.Location = new System.Drawing.Point(456, 67);
@@ -842,86 +954,6 @@
             this.pictureBoxState.Size = new System.Drawing.Size(36, 36);
             this.pictureBoxState.TabIndex = 19;
             this.pictureBoxState.TabStop = false;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox6.Location = new System.Drawing.Point(508, 694);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(120, 80);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 15;
-            this.pictureBox6.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox6, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
-            this.pictureBox6.DoubleClick += new System.EventHandler(this.pictureBox6_DoubleClick);
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox5.Location = new System.Drawing.Point(388, 694);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(120, 80);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 14;
-            this.pictureBox5.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox5, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
-            this.pictureBox5.DoubleClick += new System.EventHandler(this.pictureBox5_DoubleClick);
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox4.Location = new System.Drawing.Point(268, 694);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(120, 80);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 13;
-            this.pictureBox4.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox4, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
-            this.pictureBox4.DoubleClick += new System.EventHandler(this.pictureBox4_DoubleClick);
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox3.Location = new System.Drawing.Point(148, 694);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(120, 80);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 12;
-            this.pictureBox3.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox3, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
-            this.pictureBox3.DoubleClick += new System.EventHandler(this.pictureBox3_DoubleClick);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Location = new System.Drawing.Point(28, 694);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(120, 80);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 11;
-            this.pictureBox2.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox2, "キャプチャ画像。ダブルクリックで、静止画出力フォルダを開きます");
-            this.pictureBox2.DoubleClick += new System.EventHandler(this.pictureBox2_DoubleClick);
-            // 
-            // buttonSnap
-            // 
-            this.buttonSnap.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.buttonSnap.Image = ((System.Drawing.Image)(resources.GetObject("buttonSnap.Image")));
-            this.buttonSnap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonSnap.Location = new System.Drawing.Point(515, 67);
-            this.buttonSnap.Name = "buttonSnap";
-            this.buttonSnap.Padding = new System.Windows.Forms.Padding(3);
-            this.buttonSnap.Size = new System.Drawing.Size(110, 36);
-            this.buttonSnap.TabIndex = 6;
-            this.buttonSnap.Text = "静止画";
-            this.toolTip1.SetToolTip(this.buttonSnap, "ビデオキャプチャ、動画再生時、静止画をSnapします");
-            this.buttonSnap.UseVisualStyleBackColor = true;
-            this.buttonSnap.Click += new System.EventHandler(this.buttonSnap_Click);
             // 
             // buttonExit
             // 
@@ -937,27 +969,12 @@
             this.buttonExit.UseVisualStyleBackColor = true;
             this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
             // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(515, 30);
-            this.button2.Name = "button2";
-            this.button2.Padding = new System.Windows.Forms.Padding(3);
-            this.button2.Size = new System.Drawing.Size(110, 36);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "開始";
-            this.toolTip1.SetToolTip(this.button2, "キャプチャを開始します");
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(28, 212);
+            this.pictureBox1.Location = new System.Drawing.Point(29, 212);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(720, 480);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -967,21 +984,6 @@
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(628, 30);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(3);
-            this.button1.Size = new System.Drawing.Size(110, 36);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "動画再生";
-            this.toolTip1.SetToolTip(this.button1, "録画したファイルを開きます");
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // pictureBoxBar
             // 
@@ -1060,12 +1062,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownG)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarGamma)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBar)).EndInit();
             this.ResumeLayout(false);

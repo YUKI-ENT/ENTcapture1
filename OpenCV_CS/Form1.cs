@@ -1635,14 +1635,17 @@ namespace ENTcapture
                 PtName = newPtName;
 
                 // 履歴/コンボ更新（重複チェック）
-                dicPtHisory[PtID] = PtName;
-                if (comboBoxID.Items.IndexOf(PtID) < 0)
+                // --- UI 更新は必ずInvoke ---
+                if (comboBoxID.InvokeRequired)
                 {
-                    comboBoxID.Items.Add(PtID);
-                    comboBoxName.Items.Add(PtName);
-                    comboBoxID.Text = PtID;
-                    comboBoxName.Text = PtName;
-                    button4.PerformClick(); 
+                    comboBoxID.Invoke((MethodInvoker)(() =>
+                    {
+                        updateUI(PtID, PtName);
+                    }));
+                }
+                else
+                {
+                    updateUI(PtID, PtName);
                 }
 
                 return true; // 「内容が変わった」
@@ -1656,8 +1659,21 @@ namespace ENTcapture
             }
            
         }
+        // UI更新専用メソッド
+        private void updateUI(string id, string name)
+        {
+            dicPtHisory[id] = name;
+            if (comboBoxID.Items.IndexOf(id) < 0)
+            {
+                comboBoxID.Items.Add(id);
+                comboBoxName.Items.Add(name);
+            }
+            comboBoxID.Text = id;
+            comboBoxName.Text = name;
+            button4.PerformClick();
+        }
 
-       
+
 
         private void button3_Click(object sender, EventArgs e)//再生・一時停止
         {

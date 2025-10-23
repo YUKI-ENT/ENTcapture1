@@ -85,7 +85,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://ts.ssl.com</ManifestTimestampUrl>
@@ -255,4 +255,8 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "&amp; 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe' sign /fd SHA256 /td SHA256 /tr http://timestamp.digicert.com /sha1 89AA6D9BABBAAE6672A34DE9F07E47359389ACF2 /s My '$(TargetPath)'"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
