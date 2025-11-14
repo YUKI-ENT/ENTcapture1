@@ -94,17 +94,18 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.buttonSnap = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
             this.checkBoxOpenCVmode = new System.Windows.Forms.CheckBox();
             this.checkBoxSwapAsync = new System.Windows.Forms.CheckBox();
+            this.checkBoxRecord = new System.Windows.Forms.CheckBox();
             this.pictureBoxState = new System.Windows.Forms.PictureBox();
             this.buttonExit = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBoxBar = new System.Windows.Forms.PictureBox();
+            this.panelInfoRow = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -123,6 +124,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBar)).BeginInit();
+            this.panelInfoRow.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelMessage
@@ -148,12 +150,16 @@
             // labelFPS
             // 
             this.labelFPS.AutoSize = true;
-            this.labelFPS.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFPS.Location = new System.Drawing.Point(55, 189);
+            this.labelFPS.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.labelFPS.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFPS.Location = new System.Drawing.Point(46, 4);
+            this.labelFPS.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
             this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(26, 12);
+            this.labelFPS.Padding = new System.Windows.Forms.Padding(8, 6, 8, 2);
+            this.labelFPS.Size = new System.Drawing.Size(60, 23);
             this.labelFPS.TabIndex = 17;
-            this.labelFPS.Text = "fps";
+            this.labelFPS.Text = "00.0fps";
+            this.toolTip1.SetToolTip(this.labelFPS, "fps");
             // 
             // contextMenuStrip1
             // 
@@ -163,12 +169,16 @@
             // labelTime
             // 
             this.labelTime.AutoSize = true;
-            this.labelTime.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTime.Location = new System.Drawing.Point(148, 189);
+            this.labelTime.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.labelTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTime.Location = new System.Drawing.Point(112, 4);
+            this.labelTime.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
             this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(26, 12);
+            this.labelTime.Padding = new System.Windows.Forms.Padding(8, 6, 8, 2);
+            this.labelTime.Size = new System.Drawing.Size(59, 23);
             this.labelTime.TabIndex = 20;
-            this.labelTime.Text = "sec";
+            this.labelTime.Text = "00:00.0";
+            this.toolTip1.SetToolTip(this.labelTime, "elapsed time");
             // 
             // trackBar1
             // 
@@ -191,7 +201,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(105, 70);
+            this.label3.Location = new System.Drawing.Point(146, 70);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 15);
             this.label3.TabIndex = 28;
@@ -201,7 +211,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label4.Location = new System.Drawing.Point(254, 70);
+            this.label4.Location = new System.Drawing.Point(327, 70);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 15);
             this.label4.TabIndex = 30;
@@ -211,7 +221,7 @@
             // 
             this.comboBoxTest.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.comboBoxTest.FormattingEnabled = true;
-            this.comboBoxTest.Location = new System.Drawing.Point(297, 67);
+            this.comboBoxTest.Location = new System.Drawing.Point(376, 67);
             this.comboBoxTest.Name = "comboBoxTest";
             this.comboBoxTest.Size = new System.Drawing.Size(116, 23);
             this.comboBoxTest.TabIndex = 2;
@@ -219,6 +229,7 @@
             // radioButton1
             // 
             this.radioButton1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton1.AutoEllipsis = true;
             this.radioButton1.Checked = true;
             this.radioButton1.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton1.Location = new System.Drawing.Point(12, 30);
@@ -236,6 +247,7 @@
             // radioButton2
             // 
             this.radioButton2.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton2.AutoEllipsis = true;
             this.radioButton2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton2.Location = new System.Drawing.Point(92, 30);
             this.radioButton2.Margin = new System.Windows.Forms.Padding(0);
@@ -251,6 +263,7 @@
             // radioButton3
             // 
             this.radioButton3.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton3.AutoEllipsis = true;
             this.radioButton3.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton3.Location = new System.Drawing.Point(172, 30);
             this.radioButton3.Margin = new System.Windows.Forms.Padding(0);
@@ -266,6 +279,7 @@
             // radioButton4
             // 
             this.radioButton4.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton4.AutoEllipsis = true;
             this.radioButton4.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton4.Location = new System.Drawing.Point(252, 30);
             this.radioButton4.Margin = new System.Windows.Forms.Padding(0);
@@ -369,7 +383,7 @@
             // 
             this.checkBoxVideo.AutoSize = true;
             this.checkBoxVideo.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBoxVideo.Location = new System.Drawing.Point(303, 90);
+            this.checkBoxVideo.Location = new System.Drawing.Point(383, 90);
             this.checkBoxVideo.Name = "checkBoxVideo";
             this.checkBoxVideo.Size = new System.Drawing.Size(109, 19);
             this.checkBoxVideo.TabIndex = 39;
@@ -701,7 +715,7 @@
             // 
             this.checkBoxNorec.AutoSize = true;
             this.checkBoxNorec.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBoxNorec.Location = new System.Drawing.Point(203, 90);
+            this.checkBoxNorec.Location = new System.Drawing.Point(282, 90);
             this.checkBoxNorec.Name = "checkBoxNorec";
             this.checkBoxNorec.Size = new System.Drawing.Size(88, 19);
             this.checkBoxNorec.TabIndex = 46;
@@ -713,6 +727,7 @@
             // radioButton5
             // 
             this.radioButton5.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton5.AutoEllipsis = true;
             this.radioButton5.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton5.Location = new System.Drawing.Point(332, 30);
             this.radioButton5.Margin = new System.Windows.Forms.Padding(0);
@@ -728,6 +743,7 @@
             // radioButton6
             // 
             this.radioButton6.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton6.AutoEllipsis = true;
             this.radioButton6.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioButton6.Location = new System.Drawing.Point(412, 30);
             this.radioButton6.Margin = new System.Windows.Forms.Padding(0);
@@ -756,7 +772,7 @@
             // button4
             // 
             this.button4.Image = global::ENTcapture.Properties.Resources.Stop;
-            this.button4.Location = new System.Drawing.Point(344, 183);
+            this.button4.Location = new System.Drawing.Point(347, 183);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(53, 28);
             this.button4.TabIndex = 8;
@@ -855,21 +871,6 @@
             this.buttonSnap.UseVisualStyleBackColor = true;
             this.buttonSnap.Click += new System.EventHandler(this.buttonSnap_Click);
             // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(515, 30);
-            this.button2.Name = "button2";
-            this.button2.Padding = new System.Windows.Forms.Padding(3);
-            this.button2.Size = new System.Drawing.Size(110, 36);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "開始";
-            this.toolTip1.SetToolTip(this.button2, "キャプチャを開始します");
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -893,7 +894,7 @@
             this.comboBoxID.Location = new System.Drawing.Point(28, 67);
             this.comboBoxID.MaxDropDownItems = 12;
             this.comboBoxID.Name = "comboBoxID";
-            this.comboBoxID.Size = new System.Drawing.Size(74, 23);
+            this.comboBoxID.Size = new System.Drawing.Size(106, 23);
             this.comboBoxID.TabIndex = 48;
             this.comboBoxID.SelectedIndexChanged += new System.EventHandler(this.comboBoxID_SelectedIndexChanged);
             this.comboBoxID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxID_KeyPress);
@@ -904,10 +905,10 @@
             this.comboBoxName.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.comboBoxName.FormattingEnabled = true;
             this.comboBoxName.IntegralHeight = false;
-            this.comboBoxName.Location = new System.Drawing.Point(148, 67);
+            this.comboBoxName.Location = new System.Drawing.Point(195, 67);
             this.comboBoxName.MaxDropDownItems = 12;
             this.comboBoxName.Name = "comboBoxName";
-            this.comboBoxName.Size = new System.Drawing.Size(100, 23);
+            this.comboBoxName.Size = new System.Drawing.Size(121, 23);
             this.comboBoxName.TabIndex = 49;
             this.comboBoxName.SelectedIndexChanged += new System.EventHandler(this.comboBoxName_SelectedIndexChanged);
             this.comboBoxName.Leave += new System.EventHandler(this.comboBoxName_Leave);
@@ -915,12 +916,16 @@
             // labelFrames
             // 
             this.labelFrames.AutoSize = true;
-            this.labelFrames.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFrames.Location = new System.Drawing.Point(229, 189);
+            this.labelFrames.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.labelFrames.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFrames.Location = new System.Drawing.Point(177, 4);
+            this.labelFrames.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
             this.labelFrames.Name = "labelFrames";
-            this.labelFrames.Size = new System.Drawing.Size(26, 12);
+            this.labelFrames.Padding = new System.Windows.Forms.Padding(8, 6, 8, 2);
+            this.labelFrames.Size = new System.Drawing.Size(40, 23);
             this.labelFrames.TabIndex = 50;
             this.labelFrames.Text = "0/0";
+            this.toolTip1.SetToolTip(this.labelFrames, "Frames");
             // 
             // checkBoxOpenCVmode
             // 
@@ -947,11 +952,29 @@
             this.checkBoxSwapAsync.UseVisualStyleBackColor = true;
             this.checkBoxSwapAsync.CheckedChanged += new System.EventHandler(this.checkBoxSwapAsync_CheckedChanged);
             // 
+            // checkBoxRecord
+            // 
+            this.checkBoxRecord.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxRecord.Font = new System.Drawing.Font("Meiryo UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.checkBoxRecord.Image = global::ENTcapture.Properties.Resources.Record;
+            this.checkBoxRecord.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.checkBoxRecord.Location = new System.Drawing.Point(515, 30);
+            this.checkBoxRecord.Name = "checkBoxRecord";
+            this.checkBoxRecord.Padding = new System.Windows.Forms.Padding(3);
+            this.checkBoxRecord.Size = new System.Drawing.Size(110, 36);
+            this.checkBoxRecord.TabIndex = 54;
+            this.checkBoxRecord.Text = "録画開始";
+            this.checkBoxRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.checkBoxRecord, "動画のプレビュー/録画を開始/終了します");
+            this.checkBoxRecord.UseVisualStyleBackColor = true;
+            this.checkBoxRecord.CheckedChanged += new System.EventHandler(this.checkBoxRecord_CheckedChanged);
+            // 
             // pictureBoxState
             // 
-            this.pictureBoxState.Location = new System.Drawing.Point(456, 67);
+            this.pictureBoxState.Location = new System.Drawing.Point(6, 4);
+            this.pictureBoxState.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
             this.pictureBoxState.Name = "pictureBoxState";
-            this.pictureBoxState.Size = new System.Drawing.Size(36, 36);
+            this.pictureBoxState.Size = new System.Drawing.Size(32, 24);
             this.pictureBoxState.TabIndex = 19;
             this.pictureBoxState.TabStop = false;
             // 
@@ -994,16 +1017,32 @@
             this.pictureBoxBar.TabIndex = 40;
             this.pictureBoxBar.TabStop = false;
             // 
+            // panelInfoRow
+            // 
+            this.panelInfoRow.AutoSize = true;
+            this.panelInfoRow.Controls.Add(this.pictureBoxState);
+            this.panelInfoRow.Controls.Add(this.labelFPS);
+            this.panelInfoRow.Controls.Add(this.labelTime);
+            this.panelInfoRow.Controls.Add(this.labelFrames);
+            this.panelInfoRow.Location = new System.Drawing.Point(28, 179);
+            this.panelInfoRow.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.panelInfoRow.Name = "panelInfoRow";
+            this.panelInfoRow.Padding = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            this.panelInfoRow.Size = new System.Drawing.Size(316, 32);
+            this.panelInfoRow.TabIndex = 55;
+            this.panelInfoRow.WrapContents = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.ClientSize = new System.Drawing.Size(930, 779);
+            this.Controls.Add(this.panelInfoRow);
+            this.Controls.Add(this.checkBoxRecord);
             this.Controls.Add(this.checkBoxSwapAsync);
             this.Controls.Add(this.checkBoxOpenCVmode);
             this.Controls.Add(this.radioButton6);
-            this.Controls.Add(this.labelFrames);
             this.Controls.Add(this.comboBoxName);
             this.Controls.Add(this.comboBoxID);
             this.Controls.Add(this.radioButton5);
@@ -1025,9 +1064,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.labelTime);
-            this.Controls.Add(this.pictureBoxState);
-            this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
@@ -1037,7 +1073,6 @@
             this.Controls.Add(this.buttonSnap);
             this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.labelMessage);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.trackBar1);
@@ -1070,6 +1105,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBar)).EndInit();
+            this.panelInfoRow.ResumeLayout(false);
+            this.panelInfoRow.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1079,7 +1116,6 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label labelMessage;
         private System.Windows.Forms.Button buttonExit;
         private System.Windows.Forms.Button buttonSnap;
@@ -1152,6 +1188,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox checkBoxOpenCVmode;
         private System.Windows.Forms.CheckBox checkBoxSwapAsync;
+        private System.Windows.Forms.CheckBox checkBoxRecord;
+        private System.Windows.Forms.FlowLayoutPanel panelInfoRow;
     }
 }
 

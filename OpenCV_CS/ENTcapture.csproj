@@ -201,6 +201,7 @@
     <Content Include="openh264-1.8.0-win64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Record.png" />
     <None Include="Resources\Pause.png" />
     <None Include="Resources\Play.png" />
     <None Include="Resources\Last recor.png" />
