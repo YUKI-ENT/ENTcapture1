@@ -89,6 +89,9 @@ namespace ENTcapture
         //Status bitmap Rec Play等
         private Bitmap _statusBmp;
 
+        private Brush _progressOn = new SolidBrush(ColorTranslator.FromHtml("#2196F3"));
+        private Brush _progressOff = Brushes.Gray;
+
         public bool SnapFlag = false, PauseReloadFlag = false;
 
         private bool SwapAsync = true;
@@ -434,7 +437,7 @@ namespace ENTcapture
 
             if (!CVcapture)
             {
-                // AForge 等でのキャプチャ
+                // Accordでのキャプチャ
                 connectVideo();
                 videoSource.VideoResolution = videoCapabilities[toolStripComboBoxResolution.SelectedIndex];
 
@@ -667,7 +670,7 @@ namespace ENTcapture
             ctlLock(1);
 
             frame_start = 0;
-            drawBar(0, 100, Brushes.Turquoise);
+            drawBar(0, 100, _progressOn);
           
             await readVideoAsync(videoFile);
 
@@ -675,7 +678,7 @@ namespace ENTcapture
             //this.button3.Text = "再生";
             button3.Image = Properties.Resources.Play;
 
-            drawBar(0, 0, Brushes.Gray);
+            drawBar(0, 0, _progressOff);
 
             ctlLock(9);
             mode = 0;
@@ -894,7 +897,7 @@ namespace ENTcapture
                     Debug.WriteLine(string.Format("OpenCvSharp.Size:{0}x{1}, Codec:{2},file:{3}", vwidth, vheight, s, videofile));
 
                     double fps = cvoutfps;
-                    //if (presetFPS > 0) fps = presetFPS;
+                    if (presetFPS > 0) fps = presetFPS;
 
                     cvout = new VideoWriter(videofile, fc, fps, dsize);
                     Debug.WriteLine("cvout start.");
@@ -2283,7 +2286,7 @@ namespace ENTcapture
             if (this.trackBar1.Value > frame_start)
             {
                 frame_end = trackBar1.Value;
-                drawBar(frame_start * 100 / trackBar1.Maximum, frame_end * 100 / trackBar1.Maximum, Brushes.Turquoise);
+                drawBar(frame_start * 100 / trackBar1.Maximum, frame_end * 100 / trackBar1.Maximum, _progressOn);
             }
             else
             {
@@ -2296,7 +2299,7 @@ namespace ENTcapture
             if (this.trackBar1.Value < frame_end)
             {
                 frame_start = trackBar1.Value;
-                drawBar(frame_start * 100 / trackBar1.Maximum, frame_end * 100 / trackBar1.Maximum, Brushes.Turquoise);
+                drawBar(frame_start * 100 / trackBar1.Maximum, frame_end * 100 / trackBar1.Maximum, _progressOn);
             }
             else
             {
@@ -3314,7 +3317,11 @@ namespace ENTcapture
             int rmargin = 12;
             int s = lmargin + ((pictureBoxBar.Width - lmargin - rmargin) * start / 100);
             int e = lmargin + ((pictureBoxBar.Width - lmargin - rmargin) * end / 100);
-            g.FillRectangle(br, s, 0, e - s, pictureBoxBar.Height);
+            //g.FillRectangle(br, s, 0, e - s, pictureBoxBar.Height);
+            int barHeight = pictureBoxBar.Height / 2; // 高さを半分（または固定で 8 など）にする
+            int y = (pictureBoxBar.Height - barHeight) / 2; // 上下の真ん中を計算
+            g.FillRectangle(br, s, y, e - s, barHeight);
+
             pictureBoxBar.Image = canvas;
 
             g.Dispose();

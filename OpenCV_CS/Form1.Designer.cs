@@ -95,12 +95,12 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.buttonSnap = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.labelFrames = new System.Windows.Forms.Label();
+            this.checkBoxRecord = new System.Windows.Forms.CheckBox();
             this.comboBoxID = new System.Windows.Forms.ComboBox();
             this.comboBoxName = new System.Windows.Forms.ComboBox();
-            this.labelFrames = new System.Windows.Forms.Label();
             this.checkBoxOpenCVmode = new System.Windows.Forms.CheckBox();
             this.checkBoxSwapAsync = new System.Windows.Forms.CheckBox();
-            this.checkBoxRecord = new System.Windows.Forms.CheckBox();
             this.pictureBoxState = new System.Windows.Forms.PictureBox();
             this.buttonExit = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -886,6 +886,37 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // labelFrames
+            // 
+            this.labelFrames.AutoSize = true;
+            this.labelFrames.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.labelFrames.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFrames.Location = new System.Drawing.Point(177, 4);
+            this.labelFrames.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
+            this.labelFrames.Name = "labelFrames";
+            this.labelFrames.Padding = new System.Windows.Forms.Padding(8, 6, 8, 2);
+            this.labelFrames.Size = new System.Drawing.Size(40, 23);
+            this.labelFrames.TabIndex = 50;
+            this.labelFrames.Text = "0/0";
+            this.toolTip1.SetToolTip(this.labelFrames, "Frames");
+            // 
+            // checkBoxRecord
+            // 
+            this.checkBoxRecord.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxRecord.Font = new System.Drawing.Font("Meiryo UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.checkBoxRecord.Image = global::ENTcapture.Properties.Resources.Record;
+            this.checkBoxRecord.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.checkBoxRecord.Location = new System.Drawing.Point(515, 30);
+            this.checkBoxRecord.Name = "checkBoxRecord";
+            this.checkBoxRecord.Padding = new System.Windows.Forms.Padding(3);
+            this.checkBoxRecord.Size = new System.Drawing.Size(110, 36);
+            this.checkBoxRecord.TabIndex = 54;
+            this.checkBoxRecord.Text = "録画開始";
+            this.checkBoxRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.checkBoxRecord, "動画のプレビュー/録画を開始/終了します");
+            this.checkBoxRecord.UseVisualStyleBackColor = true;
+            this.checkBoxRecord.CheckedChanged += new System.EventHandler(this.checkBoxRecord_CheckedChanged);
+            // 
             // comboBoxID
             // 
             this.comboBoxID.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -913,20 +944,6 @@
             this.comboBoxName.SelectedIndexChanged += new System.EventHandler(this.comboBoxName_SelectedIndexChanged);
             this.comboBoxName.Leave += new System.EventHandler(this.comboBoxName_Leave);
             // 
-            // labelFrames
-            // 
-            this.labelFrames.AutoSize = true;
-            this.labelFrames.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.labelFrames.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFrames.Location = new System.Drawing.Point(177, 4);
-            this.labelFrames.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
-            this.labelFrames.Name = "labelFrames";
-            this.labelFrames.Padding = new System.Windows.Forms.Padding(8, 6, 8, 2);
-            this.labelFrames.Size = new System.Drawing.Size(40, 23);
-            this.labelFrames.TabIndex = 50;
-            this.labelFrames.Text = "0/0";
-            this.toolTip1.SetToolTip(this.labelFrames, "Frames");
-            // 
             // checkBoxOpenCVmode
             // 
             this.checkBoxOpenCVmode.AutoSize = true;
@@ -951,23 +968,6 @@
             this.checkBoxSwapAsync.Text = "非同期描画";
             this.checkBoxSwapAsync.UseVisualStyleBackColor = true;
             this.checkBoxSwapAsync.CheckedChanged += new System.EventHandler(this.checkBoxSwapAsync_CheckedChanged);
-            // 
-            // checkBoxRecord
-            // 
-            this.checkBoxRecord.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBoxRecord.Font = new System.Drawing.Font("Meiryo UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBoxRecord.Image = global::ENTcapture.Properties.Resources.Record;
-            this.checkBoxRecord.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.checkBoxRecord.Location = new System.Drawing.Point(515, 30);
-            this.checkBoxRecord.Name = "checkBoxRecord";
-            this.checkBoxRecord.Padding = new System.Windows.Forms.Padding(3);
-            this.checkBoxRecord.Size = new System.Drawing.Size(110, 36);
-            this.checkBoxRecord.TabIndex = 54;
-            this.checkBoxRecord.Text = "録画開始";
-            this.checkBoxRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.toolTip1.SetToolTip(this.checkBoxRecord, "動画のプレビュー/録画を開始/終了します");
-            this.checkBoxRecord.UseVisualStyleBackColor = true;
-            this.checkBoxRecord.CheckedChanged += new System.EventHandler(this.checkBoxRecord_CheckedChanged);
             // 
             // pictureBoxState
             // 
@@ -1011,9 +1011,9 @@
             // pictureBoxBar
             // 
             this.pictureBoxBar.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBoxBar.Location = new System.Drawing.Point(28, 125);
+            this.pictureBoxBar.Location = new System.Drawing.Point(28, 129);
             this.pictureBoxBar.Name = "pictureBoxBar";
-            this.pictureBoxBar.Size = new System.Drawing.Size(720, 12);
+            this.pictureBoxBar.Size = new System.Drawing.Size(720, 8);
             this.pictureBoxBar.TabIndex = 40;
             this.pictureBoxBar.TabStop = false;
             // 

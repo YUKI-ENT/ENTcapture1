@@ -243,16 +243,19 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="OpenCvSharp4">
-      <Version>4.10.0.20240616</Version>
+      <Version>4.11.0.20250507</Version>
     </PackageReference>
     <PackageReference Include="OpenCvSharp4.Extensions">
-      <Version>4.10.0.20240616</Version>
+      <Version>4.11.0.20250507</Version>
     </PackageReference>
     <PackageReference Include="OpenCvSharp4.runtime.win">
-      <Version>4.10.0.20240616</Version>
+      <Version>4.11.0.20250507</Version>
     </PackageReference>
     <PackageReference Include="OpenCvSharp4.Windows">
-      <Version>4.10.0.20240616</Version>
+      <Version>4.11.0.20250507</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.6.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
