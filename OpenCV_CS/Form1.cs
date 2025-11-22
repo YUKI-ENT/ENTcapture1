@@ -858,7 +858,7 @@ namespace ENTcapture
 
                     drawStatus(2);
 
-                    Debug.WriteLine("Rec start. FPS is " + cvoutfps.ToString());
+                    LogEvents($"FPS計測値:{cvoutfps.ToString()}でした。録画を開始します。");
                     vwidth = bmp.Width;
                     vheight = bmp.Height;
 
@@ -894,14 +894,14 @@ namespace ENTcapture
                     }
                     
 
-                    Debug.WriteLine(string.Format("OpenCvSharp.Size:{0}x{1}, Codec:{2},file:{3}", vwidth, vheight, s, videofile));
+                    LogEvents(string.Format("OpenCvSharp.Size:{0}x{1}, Codec:{2},file:{3}", vwidth, vheight, s, videofile));
 
                     double fps = cvoutfps;
-                    if (presetFPS > 0) fps = presetFPS;
+                    if (presetFPS > 0 && fps > presetFPS) fps = presetFPS;
 
                     cvout = new VideoWriter(videofile, fc, fps, dsize);
-                    Debug.WriteLine("cvout start.");
-                    //writer.Open(fileName: videofile, width: 640, height: 480);
+                    LogEvents($"FPS:{fps}で録画開始しました");
+                    
                     rec_state = true;
 
                     cvout.Set(VideoWriterProperties.Quality, 100);
